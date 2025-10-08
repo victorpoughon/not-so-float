@@ -1,5 +1,9 @@
 {
   "name": "not-so-float",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/victorpoughon/not-so-float"
+  },
   "private": false,
   "version": "1.0.0",
   "type": "module",
