@@ -5,7 +5,7 @@
     "url": "https://github.com/victorpoughon/not-so-float"
   },
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "build": "tsup",
@@ -19,6 +19,7 @@
   },
   "files": [
     "dist",
+    "LICENSE",
     "package.json"
   ],
   "exports": {
