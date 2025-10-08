@@ -1,12 +1,12 @@
 {
   "name": "not-so-float",
-   "license": "MIT",
+  "version": "1.0.3",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/victorpoughon/not-so-float.git"
   },
   "private": false,
-  "version": "1.0.3",
   "type": "module",
   "scripts": {
     "build": "tsup",
