@@ -1,8 +1,9 @@
 {
   "name": "not-so-float",
+   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/victorpoughon/not-so-float"
+    "url": "git+https://github.com/victorpoughon/not-so-float.git"
   },
   "private": false,
   "version": "1.0.1",
