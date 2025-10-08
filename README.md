@@ -34,6 +34,14 @@ Design goals:
 > [!TIP]
 > If you like this open-source project consider [sponsoring me](https://github.com/sponsors/victorpoughon) on GitHub, thank you ❤️
 
+## Installation
+
+`not-so-float` build version is available [on npm](https://www.npmjs.com/package/not-so-float):
+
+```sh
+npm install not-so-float
+```
+
 ## Outward Rounding
 
 The main interest of interval arithmetic is the inclusion property. Any interval
