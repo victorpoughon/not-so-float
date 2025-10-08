@@ -1,6 +1,8 @@
 # Not So Float
 
 ![NPM Version](https://img.shields.io/npm/v/not-so-float)
+![NPM License](https://img.shields.io/npm/l/not-so-float)
+
 
 **Not So Float** is a pure TypeScript library that implements **Interval Union
 Arithmetic** over IEEE 754 double precision floats (JS numbers).
