@@ -7,6 +7,11 @@
 **Not So Float** is a pure TypeScript library that implements **Interval Union
 Arithmetic** over IEEE 754 double precision floats (JS numbers).
 
+> [!TIP]
+> Try [the interval
+> calculator](https://victorpoughon.github.io/interval-calculator/) for an
+> interactive demo of interval union arithmetic.
+
 ```typescript
 import * as nsf from "not-so-float";
 
