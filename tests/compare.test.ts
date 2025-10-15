@@ -188,6 +188,14 @@ describe("intersection of unions", () => {
 describe("complement of a union", () => {
     it("real union", () => {
         assert.deepEqual(
+            nsf.complement(nsf.union([int(3, 8)])),
+            nsf.union([int(-inf, 3), int(8, inf)])
+        );
+
+        assert.deepEqual(nsf.complement(nsf.union([int(0, 0)])), nsf.union([nsf.FULL]));
+        assert.deepEqual(nsf.complement(nsf.union([int(0, 0), int(1, 1)])), nsf.union([nsf.FULL]));
+
+        assert.deepEqual(
             nsf.complement(nsf.union([int(3, 8), int(12, 13), int(15, 16), int(17, 18)])),
             nsf.union([int(-inf, 3), int(8, 12), int(13, 15), int(16, 17), int(18, inf)])
         );

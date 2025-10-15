@@ -1,5 +1,5 @@
 import { Interval } from "./interval.ts";
-import { Union, typeCheckIsIntervalOrUnion, toUnion, EMPTY } from "./union.ts";
+import { Union, typeCheckIsIntervalOrUnion, toUnion, EMPTY, union } from "./union.ts";
 
 export function ioverlap(a: Interval, b: Interval): boolean {
     return a.hi >= b.lo && a.lo <= b.hi;
@@ -96,7 +96,8 @@ export function ucomplement(U: Union): Union {
         result.push(new Interval(U.intervals[U.intervals.length - 1].hi, Infinity));
     }
 
-    return new Union(result);
+    // Need to call the union constructor, because some intervals might touch
+    return union(result);
 }
 
 // Complement of a union or interval
