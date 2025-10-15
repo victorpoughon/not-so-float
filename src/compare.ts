@@ -32,3 +32,9 @@ export function disjoint(A: Interval | Union, B: Interval | Union) {
     const Bunion = toUnion(B);
     return toUnion(A).intervals.every((X) => iudisjoint(X, Bunion));
 }
+
+// Intersection of two intervals
+export function iintersection(a: Interval, b: Interval): Union {
+    if (a.hi < b.lo || a.lo > b.hi) return EMPTY;
+    return new Union([new Interval(Math.max(a.lo, b.lo), Math.min(a.hi, b.hi))]);
+}
