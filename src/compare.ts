@@ -1,5 +1,5 @@
 import { Interval } from "./interval.ts";
-import { Union, typeCheckIsIntervalOrUnion, toUnion } from "./union.ts";
+import { Union, typeCheckIsIntervalOrUnion, toUnion, EMPTY } from "./union.ts";
 
 export function ioverlap(a: Interval, b: Interval): boolean {
     return a.hi >= b.lo && a.lo <= b.hi;
@@ -17,7 +17,7 @@ export function iudisjoint(X: Interval, U: Union): boolean {
     return U.intervals.every((Y) => idisjoint(X, Y));
 }
 
-export function overlap(A: Interval | Union, B: Interval | Union) {
+export function overlap(A: Interval | Union, B: Interval | Union): boolean {
     typeCheckIsIntervalOrUnion(A);
     typeCheckIsIntervalOrUnion(B);
 
@@ -25,7 +25,7 @@ export function overlap(A: Interval | Union, B: Interval | Union) {
     return toUnion(A).intervals.some((X) => iuoverlap(X, Bunion));
 }
 
-export function disjoint(A: Interval | Union, B: Interval | Union) {
+export function disjoint(A: Interval | Union, B: Interval | Union): boolean {
     typeCheckIsIntervalOrUnion(A);
     typeCheckIsIntervalOrUnion(B);
 
