@@ -167,13 +167,16 @@ For example:
 [ Interval { lo: 1, hi: 2 }, Interval { lo: 4, hi: 6 } ]
 ```
 
-## Compare
+## Set theory
 
-Compare intervals and unions with the following utility functions:
+Compare and compute intervals and unions with the following implementations of
+set theory operations:
 
 ```typescript
 function overlap(A: Interval | Union, B: Interval | Union): boolean;
 function disjoint(A: Interval | Union, B: Interval | Union): boolean;
+function intersection(A: Interval | Union, B: Interval | Union): Union;
+function complement(A: Union | Interval): Union;
 ```
 
 ## Arithmetic
