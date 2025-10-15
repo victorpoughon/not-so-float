@@ -7,7 +7,7 @@ import * as nsf from "../src/index.ts";
 const int = nsf.inter;
 const inf = Infinity;
 
-describe("overlap and disjoint", () => {
+describe("overlap and disjoint intervals", () => {
     const expectOverlap = (a: nsf.Interval, b: nsf.Interval) => {
         assert.ok(
             nsf.overlap(a, b) && nsf.overlap(b, a) && !nsf.disjoint(a, b) && !nsf.disjoint(b, a)
@@ -79,6 +79,7 @@ describe("intersection of intervals", () => {
         assert.deepEqual(nsf.iintersection(int(1, 4), int(2, 3)), int(2, 3));
         assert.deepEqual(nsf.iintersection(int(1, 3), int(1, 2)), int(1, 2));
         assert.deepEqual(nsf.iintersection(int(1, 2), int(1, 2)), int(1, 2));
+        assert.deepEqual(nsf.iintersection(int(1, 2), int(2, 3)), int(2, 2));
     });
 
     it("one semi infinite, one real", () => {
@@ -118,5 +119,68 @@ describe("intersection of intervals", () => {
 
         // full
         assert.deepEqual(nsf.iintersection(nsf.FULL, nsf.FULL), nsf.FULL);
+    });
+});
+
+describe("intersection of unions", () => {
+    it("two real unions", () => {
+        const A = nsf.union([int(3, 8), int(12, 13), int(15, 16), int(17, 18)]);
+
+        const B = nsf.union([
+            int(0, 1),
+            int(2, 4),
+            int(5, 6),
+            int(7, 9),
+            int(10, 11),
+            int(14, 19),
+            int(20, 21),
+        ]);
+
+        assert.deepEqual(
+            nsf.intersection(A, B),
+            nsf.union([int(3, 4), int(5, 6), int(7, 8), int(15, 16), int(17, 18)])
+        );
+
+        assert.ok(nsf.overlap(A, B));
+        assert.ok(nsf.overlap(B, A));
+        assert.ok(!nsf.disjoint(A, B));
+        assert.ok(!nsf.disjoint(B, A));
+    });
+
+    it("semi-infinite unions", () => {
+        const A = nsf.union([int(-inf, 0), int(10, 11), int(10000, 10001)]);
+        const B = nsf.union([int(-10, -5), int(11, 12), int(15, inf)]);
+
+        assert.deepEqual(
+            nsf.intersection(A, B),
+            nsf.union([int(-10, -5), int(11, 11), int(10000, 10001)])
+        );
+
+        assert.ok(nsf.overlap(A, B));
+        assert.ok(nsf.overlap(B, A));
+        assert.ok(!nsf.disjoint(A, B));
+        assert.ok(!nsf.disjoint(B, A));
+    });
+
+    it("infinite or empty unions", () => {
+        const full = nsf.union([nsf.FULL]);
+        const empty = nsf.EMPTY;
+        const A = nsf.union([int(-inf, 0), int(10, 11), int(10000, 10001)]);
+
+        // Real and empty
+        assert.deepEqual(nsf.intersection(A, empty), empty);
+        assert.deepEqual(nsf.intersection(empty, A), empty);
+        assert.ok(nsf.disjoint(A, empty));
+        assert.ok(nsf.disjoint(empty, A));
+        assert.ok(!nsf.overlap(A, empty));
+        assert.ok(!nsf.overlap(empty, A));
+
+        // Real and full
+        assert.deepEqual(nsf.intersection(A, full), A);
+        assert.deepEqual(nsf.intersection(A, full), A);
+        assert.ok(!nsf.disjoint(A, full));
+        assert.ok(!nsf.disjoint(full, A));
+        assert.ok(nsf.overlap(A, full));
+        assert.ok(nsf.overlap(full, A));
     });
 });
