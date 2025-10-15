@@ -8,6 +8,14 @@ export class Union {
         return this.intervals.length === 0;
     }
 
+    public isFull(): boolean {
+        return (
+            this.intervals.length === 1 &&
+            this.intervals[0].lo === -Infinity &&
+            this.intervals[0].hi === Infinity
+        );
+    }
+
     public lower(): number {
         if (this.isEmpty()) return Infinity;
         return this.intervals[0].lo;
