@@ -152,6 +152,11 @@ Union class member functions:
 
 ```typescript
 class Union {
+    isEmpty(): boolean;
+    isFull(): boolean;
+    lower(): number;
+    upper(): number;
+    contains(value: number): boolean;
     forEach(callback: (x: Interval, index: number) => void): void;
     toString(numbers?: (x: number) => string): string;
     print(): void;
