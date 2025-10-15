@@ -34,7 +34,8 @@ export function disjoint(A: Interval | Union, B: Interval | Union) {
 }
 
 // Intersection of two intervals
-export function iintersection(a: Interval, b: Interval): Union {
-    if (a.hi < b.lo || a.lo > b.hi) return EMPTY;
-    return new Union([new Interval(Math.max(a.lo, b.lo), Math.min(a.hi, b.hi))]);
+export function iintersection(a: Interval, b: Interval): Interval | null {
+    if (a.hi < b.lo || a.lo > b.hi) return null;
+    return new Interval(Math.max(a.lo, b.lo), Math.min(a.hi, b.hi));
+}
 }
