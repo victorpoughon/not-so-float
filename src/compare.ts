@@ -2,7 +2,7 @@ import { Interval } from "./interval.ts";
 import { Union, typeCheckIsIntervalOrUnion, toUnion } from "./union.ts";
 
 export function ioverlap(a: Interval, b: Interval): boolean {
-    return (a.lo <= b.lo && b.lo <= a.hi) || (b.lo <= a.lo && a.lo <= b.hi);
+    return a.hi >= b.lo && a.lo <= b.hi;
 }
 
 export function idisjoint(a: Interval, b: Interval): boolean {
