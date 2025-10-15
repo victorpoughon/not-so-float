@@ -184,3 +184,24 @@ describe("intersection of unions", () => {
         assert.ok(nsf.overlap(full, A));
     });
 });
+
+describe("complement of a union", () => {
+    it("real union", () => {
+        assert.deepEqual(
+            nsf.complement(nsf.union([int(3, 8), int(12, 13), int(15, 16), int(17, 18)])),
+            nsf.union([int(-inf, 3), int(8, 12), int(13, 15), int(16, 17), int(18, inf)])
+        );
+
+        assert.deepEqual(
+            nsf.complement(
+                nsf.union([int(-inf, 3), int(8, 12), int(13, 15), int(16, 17), int(18, inf)])
+            ),
+            nsf.union([int(3, 8), int(12, 13), int(15, 16), int(17, 18)])
+        );
+    });
+
+    it("empty or full", () => {
+        assert.deepEqual(nsf.complement(nsf.union([nsf.FULL])), nsf.EMPTY);
+        assert.deepEqual(nsf.complement(nsf.EMPTY), nsf.union([nsf.FULL]));
+    });
+});

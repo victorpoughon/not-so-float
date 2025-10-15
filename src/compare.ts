@@ -73,3 +73,34 @@ export function intersection(A: Interval | Union, B: Interval | Union): Union {
 
     return uintersection(toUnion(A), toUnion(B));
 }
+
+// Complement of a union
+export function ucomplement(U: Union): Union {
+    if (U.isEmpty()) return new Union([new Interval(-Infinity, Infinity)]);
+    if (U.isFull()) return EMPTY;
+
+    const result: Interval[] = [];
+
+    // Add interval from -Infinity to first interval if needed
+    if (U.intervals[0].lo !== -Infinity) {
+        result.push(new Interval(-Infinity, U.intervals[0].lo));
+    }
+
+    // Add intervals between consecutive intervals in the union
+    for (let i = 0; i < U.intervals.length - 1; i++) {
+        result.push(new Interval(U.intervals[i].hi, U.intervals[i + 1].lo));
+    }
+
+    // Add interval from last interval to Infinity if needed
+    if (U.intervals[U.intervals.length - 1].hi !== Infinity) {
+        result.push(new Interval(U.intervals[U.intervals.length - 1].hi, Infinity));
+    }
+
+    return new Union(result);
+}
+
+// Complement of a union or interval
+export function complement(A: Union | Interval): Union {
+    typeCheckIsIntervalOrUnion(A);
+    return ucomplement(toUnion(A));
+}
