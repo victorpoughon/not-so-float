@@ -228,3 +228,5 @@ function disjoint(A: Interval | Union, B: Interval | Union): boolean;
 ## Future improvements
 
 * Support multiple rounding modes
+* Add shortcut function for `nsf.union(nsf.inter([x]))`
+* Change FULL constant to Union
