@@ -37,6 +37,7 @@ Design goals:
 -   Functional (stateless) API
 -   Strong focus on simplicity and clarity of implementation
 -   No signed zero convention, `-0 === 0` should still be true in the context of interval bounds
+-   Interval bounds are always inclusive
 -   No empty interval, but empty unions
 -   Support division by intervals containing zero without compromise
 
