@@ -52,6 +52,12 @@ Design goals:
 npm install not-so-float
 ```
 
+Import the library with:
+
+```javascript
+import * as nsf from "not-so-float";
+```
+
 ## Outward Rounding
 
 The main interest of interval arithmetic is the inclusion property. Any interval
