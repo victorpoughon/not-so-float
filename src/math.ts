@@ -123,14 +123,16 @@ export function ipowInt(X: Interval, n: number): Union {
     }
 
     if (n < 0) return idiv(new Interval(1, 1), ipowInt(X, -n).intervals[0]);
-    if (n === 0) return new Union([X]);
+    if (n === 0) return new Union([new Interval(1, 1)]);
 
     if (X.lo > 0 || n % 2 !== 0) {
         return new Union([new Interval(leftPowInt(X.lo, n), rightPowInt(X.hi, n))]);
     } else if (X.hi < 0) {
         return new Union([new Interval(leftPowInt(X.hi, n), rightPowInt(X.lo, n))]);
     } else {
-        return new Union([new Interval(0, rightPowInt(Math.abs(X.lo), n))]);
+        return new Union([
+            new Interval(0, rightPowInt(Math.max(Math.abs(X.hi), Math.abs(X.lo)), n)),
+        ]);
     }
 }
 
