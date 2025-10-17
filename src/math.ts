@@ -130,9 +130,8 @@ export function ipowInt(X: Interval, n: number): Union {
     } else if (X.hi < 0) {
         return new Union([new Interval(leftPowInt(X.hi, n), rightPowInt(X.lo, n))]);
     } else {
-        return new Union([
-            new Interval(0, rightPowInt(Math.max(Math.abs(X.hi), Math.abs(X.lo)), n)),
-        ]);
+        // X contains 0
+        return new Union([new Interval(0, rightPowInt(Math.max(X.hi, -X.lo), n))]);
     }
 }
 
