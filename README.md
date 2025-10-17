@@ -217,15 +217,16 @@ function complement(A: Union | Interval): Union;
 
 <div align="center">
 
-|         Operation | API function  |
-| ----------------: | :------------ |
-|    Absolute value | `nsf.abs(A)`  |
-| Natural logarithm | `nsf.log(A)`  |
-|       Exponential | `nsf.exp(A)`  |
-|       Square root | `nsf.sqrt(A)` |
-|            Cosine | `nsf.cos(A)`  |
-|              Sine | `nsf.sin(A)`  |
-|           Tangent | `nsf.tan(A)`  |
+|         Operation | API function   |
+| ----------------: | :------------- |
+|    Absolute value | `nsf.abs(A)`   |
+| Natural logarithm | `nsf.log(A)`   |
+|       Exponential | `nsf.exp(A)`   |
+|       Square root | `nsf.sqrt(A)`  |
+|    Inverse square | `nsf.sqinv(A)` |
+|            Cosine | `nsf.cos(A)`   |
+|              Sine | `nsf.sin(A)`   |
+|           Tangent | `nsf.tan(A)`   |
 
 </div>
 
@@ -242,6 +243,6 @@ function complement(A: Union | Interval): Union;
 
 ## Future improvements
 
-* Support multiple rounding modes
-* Add shortcut function for `nsf.union(nsf.inter([x]))`
-* Change FULL constant to Union
+-   Support multiple rounding modes
+-   Add shortcut function for `nsf.union(nsf.inter([x]))`
+-   Change FULL constant to Union

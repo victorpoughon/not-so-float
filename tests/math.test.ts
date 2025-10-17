@@ -4,10 +4,12 @@ import assert from "node:assert";
 import * as nsf from "../src/index.ts";
 import { sampleInterval, sampleUnion } from "./testIntervals.ts";
 
+const int = nsf.inter;
 const uint = (a: number, b: number) => nsf.union([nsf.inter(a, b)]);
 const inf = Infinity;
 const prev = nsf.prev;
 const next = nsf.next;
+const union = nsf.union;
 
 describe("math functions", () => {
     it("abs", () => {
@@ -51,5 +53,17 @@ describe("math functions", () => {
         assert.deepEqual(nsf.sqrt(uint(-inf, 0)), uint(0, 0));
         assert.deepEqual(nsf.sqrt(uint(0, 1)), uint(0, 1));
         assert.deepEqual(nsf.sqrt(uint(1, 2)), uint(1, next(Math.sqrt(2))));
+    });
+
+    it("sqinv", () => {
+        assert.deepEqual(nsf.sqinv(uint(0, 64)), union([int(prev(-8), next(8))]));
+
+        assert.deepEqual(
+            nsf.sqinv(uint(4, 64)),
+            union([int(prev(-8), next(-2)), int(prev(2), next(8))])
+        );
+
+        assert.deepEqual(nsf.sqinv(uint(-10, -5)), nsf.EMPTY);
+        assert.deepEqual(nsf.sqinv(uint(-10, 0)), uint(0, 0));
     });
 });

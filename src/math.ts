@@ -12,7 +12,7 @@ import {
     makeBinaryOpUnion,
     makeBinaryOpEither,
 } from "./union.ts";
-import { idiv, umul, ineg } from "./arithmetic.ts";
+import { idiv, umul, ineg, uneg } from "./arithmetic.ts";
 
 // ABS
 
@@ -184,3 +184,12 @@ export function usqrt(U: Union): Union {
 }
 
 export const sqrt = makeUnaryOpEither(usqrt);
+
+// SQINV: inverse of the square function
+
+export function usqinv(U: Union): Union {
+    const x = usqrt(U);
+    return union(uneg(x).intervals.concat(x.intervals));
+}
+
+export const sqinv = makeUnaryOpEither(usqinv);
