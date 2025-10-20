@@ -269,7 +269,6 @@ describe("math functions", () => {
 
     it("powIntInv (n=-1)", () => {
         const n = -1;
-        const one = uint(1, 1);
 
         // empty and full
         assert.deepEqual(nsf.powIntInv(nsf.EMPTY, n), nsf.EMPTY);
