@@ -229,14 +229,18 @@ export function powIntInv(A: Interval | Union, n: number): Union {
 // x = y^(1/n) with n odd and positive
 function leftPowOddInv(y: number, n: number): number {
     if (y === 0) return 0;
+    if (y === 1) return 1;
+    if (y === -1) return -1;
     else if (y > 0) return prev(Math.pow(y, prev(1 / n)));
-    else return prev(-Math.pow(y, next(1 / n)));
+    else return prev(-Math.pow(-y, next(1 / n)));
 }
 
 function rightPowOddInv(y: number, n: number): number {
     if (y === 0) return 0;
+    if (y === 1) return 1;
+    if (y === -1) return -1;
     else if (y > 0) return next(Math.pow(y, next(1 / n)));
-    else return next(-Math.pow(y, prev(1 / n)));
+    else return next(-Math.pow(-y, prev(1 / n)));
 }
 
 // Inverse of an odd integer power

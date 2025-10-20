@@ -91,7 +91,55 @@ describe("math functions", () => {
         assert.deepEqual(nsf.powIntInv(uint(-10, 0), 2), uint(0, 0));
     });
 
-    it("powIntInv (n=2)", () => {
-        
+    it("powIntInv (n=3)", () => {
+        const n = 3;
+
+        // empty and full
+        assert.deepEqual(nsf.powIntInv(nsf.EMPTY, n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(nsf.FULL, n), nsf.UFULL);
+
+        // Degenerate 0, 1, -1
+        assert.deepEqual(nsf.powIntInv(uint(0, 0), n), uint(0, 0));
+        assert.deepEqual(nsf.powIntInv(uint(1, 1), n), uint(1, 1));
+        assert.deepEqual(nsf.powIntInv(uint(-1, -1), n), uint(-1, -1));
+
+        // Strictly positive
+        assert.deepEqual(
+            nsf.powIntInv(uint(8, 27), n),
+            union([int(prev(Math.pow(8, prev(1 / 3))), next(Math.pow(27, next(1 / 3))))])
+        );
+
+        // Strictly negative
+        assert.deepEqual(
+            nsf.powIntInv(uint(-27, -8), n),
+            union([int(prev(-Math.pow(27, next(1 / 3))), next(-Math.pow(8, prev(1 / 3))))])
+        );
+
+        // Positive touching zero
+        assert.deepEqual(
+            nsf.powIntInv(uint(0, 27), n),
+            union([int(0, next(Math.pow(27, next(1 / 3))))])
+        );
+
+        // Negative touching zero
+        assert.deepEqual(
+            nsf.powIntInv(uint(-27, 0), n),
+            union([int(prev(-Math.pow(27, next(1 / 3))), 0)])
+        );
+
+        // Mixed: non degenerate containing zero
+        assert.deepEqual(
+            nsf.powIntInv(uint(-8, 27), n),
+            union([int(prev(-Math.pow(8, next(1 / 3))), next(Math.pow(27, next(1 / 3))))])
+        );
+
+        // union
+        assert.deepEqual(
+            nsf.powIntInv(union([int(8, 27), int(-27, -8)]), n),
+            union([
+                int(prev(Math.pow(8, prev(1 / 3))), next(Math.pow(27, next(1 / 3)))),
+                int(prev(-Math.pow(27, next(1 / 3))), next(-Math.pow(8, prev(1 / 3)))),
+            ])
+        );
     });
 });
