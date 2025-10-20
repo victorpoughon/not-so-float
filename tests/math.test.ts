@@ -72,4 +72,26 @@ describe("math functions", () => {
         assert.deepEqual(nsf.sqinv(uint(-10, -5)), nsf.EMPTY);
         assert.deepEqual(nsf.sqinv(uint(-10, 0)), uint(0, 0));
     });
+
+    it("powIntInv (n=2)", () => {
+        assert.deepEqual(
+            nsf.powIntInv(uint(0, 64), 2),
+            union([int(prev(-Math.pow(64, next(1 / 2))), next(Math.pow(64, next(1 / 2))))])
+        );
+
+        assert.deepEqual(
+            nsf.powIntInv(uint(4, 64), 2),
+            union([
+                int(prev(-Math.pow(64, next(1 / 2))), next(-Math.pow(4, prev(1 / 2)))),
+                int(prev(Math.pow(4, prev(1 / 2))), next(Math.pow(64, next(1 / 2)))),
+            ])
+        );
+
+        assert.deepEqual(nsf.powIntInv(uint(-10, -5), 2), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(uint(-10, 0), 2), uint(0, 0));
+    });
+
+    it("powIntInv (n=2)", () => {
+        
+    });
 });

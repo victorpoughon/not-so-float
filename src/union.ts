@@ -156,3 +156,4 @@ export function bounded(x: number): Union {
 }
 
 export const EMPTY = new Union([]);
+export const UFULL = new Union([new Interval(-Infinity, Infinity)]);
