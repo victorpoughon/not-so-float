@@ -266,4 +266,54 @@ describe("math functions", () => {
             ])
         );
     });
+
+    it("powIntInv (n=-1)", () => {
+        const n = -1;
+        const one = uint(1, 1);
+
+        // empty and full
+        assert.deepEqual(nsf.powIntInv(nsf.EMPTY, n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(nsf.FULL, n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(0, Infinity), n), uint(0, Infinity));
+        assert.deepEqual(nsf.powIntInv(uint(1, Infinity), n), uint(0, 1));
+        assert.deepEqual(nsf.powIntInv(uint(-Infinity, 0), n), uint(-Infinity, 0));
+        assert.deepEqual(nsf.powIntInv(uint(-Infinity, -1), n), uint(-1, 0));
+
+        // Degenerate 0, 1, -1
+        assert.deepEqual(nsf.powIntInv(uint(0, 0), n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(uint(1, 1), n), uint(1, 1));
+        assert.deepEqual(nsf.powIntInv(uint(-1, -1), n), uint(-1, -1));
+
+        // Strictly positive
+        assert.deepEqual(nsf.powIntInv(uint(25, 49), n), uint(prev(1 / 49), next(1 / 25)));
+
+        // Strictly negative
+        assert.deepEqual(nsf.powIntInv(uint(-49, -25), n), uint(prev(1 / -25), next(1 / -49)));
+
+        // Positive touching zero
+        assert.deepEqual(nsf.powIntInv(uint(0, 49), n), uint(prev(1 / 49), Infinity));
+
+        // Negative touching zero
+        assert.deepEqual(nsf.powIntInv(uint(-49, 0), n), uint(-Infinity, next(1 / -49)));
+
+        // Mixed: non degenerate containing zero
+        assert.deepEqual(
+            nsf.powIntInv(uint(-25, 49), n),
+            union([int(-Infinity, next(1 / -25)), int(prev(1 / 49), Infinity)])
+        );
+        assert.deepEqual(
+            nsf.powIntInv(uint(-49, 25), n),
+            union([int(-Infinity, next(1 / -49)), int(prev(1 / 25), Infinity)])
+        );
+
+        // union
+        assert.deepEqual(
+            nsf.powIntInv(union([int(25, 49), int(100, 10000), int(-49, -25)]), n),
+            union([
+                int(prev(1 / 49), next(1 / 25)),
+                int(prev(1 / 10000), next(1 / 100)),
+                int(prev(1 / -25), next(1 / -49)),
+            ])
+        );
+    });
 });
