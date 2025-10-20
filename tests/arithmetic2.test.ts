@@ -442,7 +442,7 @@ describe("arithmetic tests", () => {
     it("div", () => {
         eq(int(0, 20), int(0, 20), [int(0, inf)]); // P0 / P0
         eq(int(0, 20), int(0, +inf), [int(0, inf)]); // P0 / P0+
-        eq(int(0, 20), int(1, 2), [int(0, next(20))]); // P0 / P1
+        eq(int(0, 20), int(1, 2), [int(0, 20)]); // P0 / P1
         eq(int(0, 20), int(10, +inf), [int(0, next(20 / 10))]); // P0 / P1+
         eq(int(0, 20), int(-50, 50), [int(-inf, inf)]); // P0 / M
         eq(int(0, 20), int(-inf, 50), [int(-inf, inf)]); // P0 / M-
@@ -468,7 +468,7 @@ describe("arithmetic tests", () => {
         eq(int(0, +inf), int(0, 0), []); // P0+ / Z
         eq(int(1, 2), int(0, 20), [int(prev(1 / 20), inf)]); // P1 / P0
         eq(int(1, 2), int(0, +inf), [int(0, inf)]); // P1 / P0+
-        eq(int(1, 2), int(1, 2), [int(prev(1 / 2), next(2))]); // P1 / P1
+        eq(int(1, 2), int(1, 2), [int(prev(1 / 2), 2)]); // P1 / P1
         eq(int(1, 2), int(10, +inf), [int(0, next(2 / 10))]); // P1 / P1+
         eq(int(1, 2), int(-50, 50), [int(-inf, next(1 / -50)), int(prev(1 / 50), inf)]); // P1 / M
         eq(int(1, 2), int(-inf, 50), [int(-inf, 0), int(prev(1 / 50), inf)]); // P1 / M-
@@ -494,7 +494,7 @@ describe("arithmetic tests", () => {
         eq(int(10, +inf), int(0, 0), []); // P1+ / Z
         eq(int(-50, 50), int(0, 20), [int(-inf, inf)]); // M / P0
         eq(int(-50, 50), int(0, +inf), [int(-inf, inf)]); // M / P0+
-        eq(int(-50, 50), int(1, 2), [int(prev(-50), next(50))]); // M / P1
+        eq(int(-50, 50), int(1, 2), [int(-50, 50)]); // M / P1
         eq(int(-50, 50), int(10, +inf), [int(prev(-50 / 10), next(50 / 10))]); // M / P1+
         eq(int(-50, 50), int(-50, 50), [int(-inf, inf)]); // M / M
         eq(int(-50, 50), int(-inf, 50), [int(-inf, inf)]); // M / M-
@@ -507,7 +507,7 @@ describe("arithmetic tests", () => {
         eq(int(-50, 50), int(0, 0), []); // M / Z
         eq(int(-inf, 50), int(0, 20), [int(-inf, inf)]); // M- / P0
         eq(int(-inf, 50), int(0, +inf), [int(-inf, inf)]); // M- / P0+
-        eq(int(-inf, 50), int(1, 2), [int(-inf, next(50 / 1))]); // M- / P1
+        eq(int(-inf, 50), int(1, 2), [int(-inf, 50)]); // M- / P1
         eq(int(-inf, 50), int(10, +inf), [int(-inf, next(50 / 10))]); // M- / P1+
         eq(int(-inf, 50), int(-50, 50), [int(-inf, inf)]); // M- / M
         eq(int(-inf, 50), int(-inf, 50), [int(-inf, inf)]); // M- / M-
@@ -520,7 +520,7 @@ describe("arithmetic tests", () => {
         eq(int(-inf, 50), int(0, 0), []); // M- / Z
         eq(int(-50, +inf), int(0, 20), [int(-inf, inf)]); // M+ / P0
         eq(int(-50, +inf), int(0, +inf), [int(-inf, inf)]); // M+ / P0+
-        eq(int(-50, +inf), int(1, 2), [int(prev(-50 / 1), inf)]); // M+ / P1
+        eq(int(-50, +inf), int(1, 2), [int(-50, inf)]); // M+ / P1
         eq(int(-50, +inf), int(10, +inf), [int(prev(-50 / 10), inf)]); // M+ / P1+
         eq(int(-50, +inf), int(-50, 50), [int(-inf, inf)]); // M+ / M
         eq(int(-50, +inf), int(-inf, 50), [int(-inf, inf)]); // M+ / M-
@@ -533,7 +533,7 @@ describe("arithmetic tests", () => {
         eq(int(-50, +inf), int(0, 0), []); // M+ / Z
         eq(int(-30, 0), int(0, 20), [int(-inf, 0)]); // N0 / P0
         eq(int(-30, 0), int(0, +inf), [int(-inf, 0)]); // N0 / P0+
-        eq(int(-30, 0), int(1, 2), [int(prev(-30 / 1), 0)]); // N0 / P1
+        eq(int(-30, 0), int(1, 2), [int(-30, 0)]); // N0 / P1
         eq(int(-30, 0), int(10, +inf), [int(prev(-30 / 10), 0)]); // N0 / P1+
         eq(int(-30, 0), int(-50, 50), [int(-inf, inf)]); // N0 / M
         eq(int(-30, 0), int(-inf, 50), [int(-inf, inf)]); // N0 / M-
@@ -559,7 +559,7 @@ describe("arithmetic tests", () => {
         eq(int(-inf, 0), int(0, 0), []); // N0- / Z
         eq(int(-5, -4), int(0, 20), [int(-inf, next(-4 / 20))]); // N1 / P0
         eq(int(-5, -4), int(0, +inf), [int(-inf, 0)]); // N1 / P0+
-        eq(int(-5, -4), int(1, 2), [int(prev(-5), next(-4 / 2))]); // N1 / P1
+        eq(int(-5, -4), int(1, 2), [int(-5, next(-4 / 2))]); // N1 / P1
         eq(int(-5, -4), int(10, +inf), [int(prev(-5 / 10), 0)]); // N1 / P1+
         eq(int(-5, -4), int(-50, 50), [int(-inf, next(-4 / 50)), int(prev(-4 / -50), inf)]); // N1 / M
         eq(int(-5, -4), int(-inf, 50), [int(-inf, next(-4 / 50)), int(0, inf)]); // N1 / M-
