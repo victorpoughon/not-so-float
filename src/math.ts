@@ -222,7 +222,7 @@ export function upowIntInv(U: Union, n: number): Union {
     }
     
     const one = new Union([new Interval(1, 1)]);
-    return upowIntInv(div(one, U), -n);
+    return div(one, upowIntInv(U, -n));
 }
 
 export function powIntInv(A: Interval | Union, n: number): Union {
