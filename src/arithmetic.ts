@@ -112,6 +112,8 @@ function leftDiv(a: number, b: number): number {
     if (b === -Infinity) {
         return Math.sign(-a) * 0;
     }
+    if (b === 1) return a;
+    if (b === -1) return -a;
     return prev(a / b);
 }
 
@@ -122,6 +124,8 @@ function rightDiv(a: number, b: number): number {
     if (b === -Infinity) {
         return Math.sign(-a) * 0;
     }
+    if (b === 1) return a;
+    if (b === -1) return -a;
     return next(a / b);
 }
 
