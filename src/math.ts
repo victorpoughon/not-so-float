@@ -200,8 +200,12 @@ export const sqinv = makeUnaryOpEither(usqinv);
 
 export function upowIntInv(U: Union, n: number): Union {
     if (n === 0) {
-        if (U.lower() === 1 && U.upper() === 1) return UFULL;
+        if (U.contains(1)) return UFULL;
         else return EMPTY;
+    }
+
+    if (n === 1) {
+        return U;
     }
 
     if (n > 0 && n % 2 === 0) {

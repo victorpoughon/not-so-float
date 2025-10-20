@@ -73,6 +73,86 @@ describe("math functions", () => {
         assert.deepEqual(nsf.sqinv(uint(-10, 0)), uint(0, 0));
     });
 
+    it("powIntInv (n=0)", () => {
+        const n = 0;
+        const one = uint(1, 1);
+
+        // empty and full
+        assert.deepEqual(nsf.powIntInv(nsf.EMPTY, n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(nsf.UFULL, n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(0, Infinity), n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(1, Infinity), n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(-Infinity, 0), n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(uint(-Infinity, -1), n), nsf.EMPTY);
+
+        // Degenerate
+        assert.deepEqual(nsf.powIntInv(uint(0, 0), n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(uint(1, 1), n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(-1, -1), n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(uint(2, 2), n), nsf.EMPTY);
+
+        // Strictly positive
+        assert.deepEqual(nsf.powIntInv(uint(25, 49), n), nsf.EMPTY);
+
+        // Strictly negative
+        assert.deepEqual(nsf.powIntInv(uint(-49, -25), n), nsf.EMPTY);
+
+        // Positive touching zero
+        assert.deepEqual(nsf.powIntInv(uint(0, 49), n), nsf.UFULL);
+
+        // Negative touching zero
+        assert.deepEqual(nsf.powIntInv(uint(-49, 0), n), nsf.EMPTY);
+
+        // Mixed: non degenerate containing zero
+        assert.deepEqual(nsf.powIntInv(uint(-25, 49), n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(-49, 25), n), nsf.UFULL);
+
+        // union
+        assert.deepEqual(
+            nsf.powIntInv(union([int(25, 49), int(100, 10000), int(-49, -25)]), n),
+            nsf.EMPTY
+        );
+    });
+
+    it("powIntInv (n=1)", () => {
+        const n = 1;
+
+        // empty and full
+        assert.deepEqual(nsf.powIntInv(nsf.EMPTY, n), nsf.EMPTY);
+        assert.deepEqual(nsf.powIntInv(nsf.FULL, n), nsf.UFULL);
+        assert.deepEqual(nsf.powIntInv(uint(0, Infinity), n), uint(0, Infinity));
+        assert.deepEqual(nsf.powIntInv(uint(1, Infinity), n), uint(1, Infinity));
+        assert.deepEqual(nsf.powIntInv(uint(-Infinity, 0), n), uint(-Infinity, 0));
+        assert.deepEqual(nsf.powIntInv(uint(-Infinity, -1), n), uint(-Infinity, -1));
+
+        // Degenerate 0, 1, -1
+        assert.deepEqual(nsf.powIntInv(uint(0, 0), n), uint(0, 0));
+        assert.deepEqual(nsf.powIntInv(uint(1, 1), n), uint(1, 1));
+        assert.deepEqual(nsf.powIntInv(uint(-1, -1), n), uint(-1, -1));
+
+        // Strictly positive
+        assert.deepEqual(nsf.powIntInv(uint(25, 49), n), uint(25, 49));
+
+        // Strictly negative
+        assert.deepEqual(nsf.powIntInv(uint(-49, -25), n), uint(-49, -25));
+
+        // Positive touching zero
+        assert.deepEqual(nsf.powIntInv(uint(0, 49), n), uint(0, 49));
+
+        // Negative touching zero
+        assert.deepEqual(nsf.powIntInv(uint(-49, 0), n), uint(-49, 0));
+
+        // Mixed: non degenerate containing zero
+        assert.deepEqual(nsf.powIntInv(uint(-25, 49), n), uint(-25, 49));
+        assert.deepEqual(nsf.powIntInv(uint(-49, 25), n), uint(-49, 25));
+
+        // union
+        assert.deepEqual(
+            nsf.powIntInv(union([int(25, 49), int(100, 10000), int(-49, -25)]), n),
+            union([int(25, 49), int(100, 10000), int(-49, -25)])
+        );
+    });
+
     it("powIntInv (n=2)", () => {
         const n = 2;
 
