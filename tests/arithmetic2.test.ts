@@ -1,7 +1,8 @@
 import { describe, it } from "node:test";
 import { strictEqual, deepEqual, ok } from "node:assert";
 
-import { Interval, interval, iadd, isub, imul, idiv, prev, next, union } from "../src/index.ts";
+import { Interval, interval, prev, next, union } from "../src/index.ts";
+import { iadd, isub, imul, idiv } from "../src/arithmetic.ts";
 
 import { sampleInterval } from "./testIntervals.ts";
 

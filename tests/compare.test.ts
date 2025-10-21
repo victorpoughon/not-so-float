@@ -1,10 +1,15 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
+// Public API
 import * as nsf from "../src/index.ts";
 
+// Internals
+import { iintersection } from "../src/compare.ts";
+import { IFULL } from "../src/interval.ts";
+
 // Shortcuts for more compact notation
-const int = nsf.inter;
+const int = nsf.interval;
 const inf = Infinity;
 
 describe("overlap and disjoint intervals", () => {
@@ -53,8 +58,8 @@ describe("overlap and disjoint intervals", () => {
     });
 
     it("FULL and another", () => {
-        expectOverlap(int(-inf, 0), nsf.FULL);
-        expectOverlap(int(0, inf), nsf.FULL);
+        expectOverlap(int(-inf, 0), IFULL);
+        expectOverlap(int(0, inf), IFULL);
 
         expectOverlap(int(1, 2), int(0, inf));
         expectOverlap(int(-2, -1), int(-inf, 0));
@@ -62,63 +67,63 @@ describe("overlap and disjoint intervals", () => {
         expectDisjoint(int(-2, -1), int(0, inf));
         expectDisjoint(int(1, 2), int(-inf, 0));
 
-        expectOverlap(int(1, 2), nsf.FULL);
-        expectOverlap(nsf.FULL, nsf.FULL);
+        expectOverlap(int(1, 2), IFULL);
+        expectOverlap(IFULL, IFULL);
     });
 });
 
 describe("intersection of intervals", () => {
     it("two real intervals", () => {
         // disjoint
-        assert.deepEqual(nsf.iintersection(int(1, 2), int(3, 4)), null);
+        assert.deepEqual(iintersection(int(1, 2), int(3, 4)), null);
 
         // overlap
-        assert.deepEqual(nsf.iintersection(int(1, 2), int(2, 3)), int(2, 2));
-        assert.deepEqual(nsf.iintersection(int(1, 3), int(2, 4)), int(2, 3));
-        assert.deepEqual(nsf.iintersection(int(1, 3), int(2, 3)), int(2, 3));
-        assert.deepEqual(nsf.iintersection(int(1, 4), int(2, 3)), int(2, 3));
-        assert.deepEqual(nsf.iintersection(int(1, 3), int(1, 2)), int(1, 2));
-        assert.deepEqual(nsf.iintersection(int(1, 2), int(1, 2)), int(1, 2));
-        assert.deepEqual(nsf.iintersection(int(1, 2), int(2, 3)), int(2, 2));
+        assert.deepEqual(iintersection(int(1, 2), int(2, 3)), int(2, 2));
+        assert.deepEqual(iintersection(int(1, 3), int(2, 4)), int(2, 3));
+        assert.deepEqual(iintersection(int(1, 3), int(2, 3)), int(2, 3));
+        assert.deepEqual(iintersection(int(1, 4), int(2, 3)), int(2, 3));
+        assert.deepEqual(iintersection(int(1, 3), int(1, 2)), int(1, 2));
+        assert.deepEqual(iintersection(int(1, 2), int(1, 2)), int(1, 2));
+        assert.deepEqual(iintersection(int(1, 2), int(2, 3)), int(2, 2));
     });
 
     it("one semi infinite, one real", () => {
         // disjoint
-        assert.deepEqual(nsf.iintersection(int(-inf, 0), int(1, 2)), null);
-        assert.deepEqual(nsf.iintersection(int(0, inf), int(-2, -1)), null);
+        assert.deepEqual(iintersection(int(-inf, 0), int(1, 2)), null);
+        assert.deepEqual(iintersection(int(0, inf), int(-2, -1)), null);
 
         // overlap
-        assert.deepEqual(nsf.iintersection(int(-inf, 1), int(1, 2)), int(1, 1));
-        assert.deepEqual(nsf.iintersection(int(-inf, 1.5), int(1, 2)), int(1, 1.5));
-        assert.deepEqual(nsf.iintersection(int(-inf, 2), int(1, 2)), int(1, 2));
-        assert.deepEqual(nsf.iintersection(int(-inf, 3), int(1, 2)), int(1, 2));
-        assert.deepEqual(nsf.iintersection(int(-1, inf), int(-2, -1)), int(-1, -1));
-        assert.deepEqual(nsf.iintersection(int(-1.5, inf), int(-2, -1)), int(-1.5, -1));
-        assert.deepEqual(nsf.iintersection(int(-2, inf), int(-2, -1)), int(-2, -1));
-        assert.deepEqual(nsf.iintersection(int(-3, inf), int(-2, -1)), int(-2, -1));
-        assert.deepEqual(nsf.iintersection(int(1, 2), int(0, inf)), int(1, 2));
-        assert.deepEqual(nsf.iintersection(int(-2, -1), int(-inf, 0)), int(-2, -1));
+        assert.deepEqual(iintersection(int(-inf, 1), int(1, 2)), int(1, 1));
+        assert.deepEqual(iintersection(int(-inf, 1.5), int(1, 2)), int(1, 1.5));
+        assert.deepEqual(iintersection(int(-inf, 2), int(1, 2)), int(1, 2));
+        assert.deepEqual(iintersection(int(-inf, 3), int(1, 2)), int(1, 2));
+        assert.deepEqual(iintersection(int(-1, inf), int(-2, -1)), int(-1, -1));
+        assert.deepEqual(iintersection(int(-1.5, inf), int(-2, -1)), int(-1.5, -1));
+        assert.deepEqual(iintersection(int(-2, inf), int(-2, -1)), int(-2, -1));
+        assert.deepEqual(iintersection(int(-3, inf), int(-2, -1)), int(-2, -1));
+        assert.deepEqual(iintersection(int(1, 2), int(0, inf)), int(1, 2));
+        assert.deepEqual(iintersection(int(-2, -1), int(-inf, 0)), int(-2, -1));
     });
 
     it("two semi infinite", () => {
-        assert.deepEqual(nsf.iintersection(int(-inf, -1), int(1, inf)), null);
+        assert.deepEqual(iintersection(int(-inf, -1), int(1, inf)), null);
 
-        assert.deepEqual(nsf.iintersection(int(-inf, 0), int(-inf, 100)), int(-inf, 0));
-        assert.deepEqual(nsf.iintersection(int(0, inf), int(100, inf)), int(100, inf));
-        assert.deepEqual(nsf.iintersection(int(-inf, 0), int(0, inf)), int(0, 0));
-        assert.deepEqual(nsf.iintersection(int(-inf, 1), int(-1, inf)), int(-1, 1));
+        assert.deepEqual(iintersection(int(-inf, 0), int(-inf, 100)), int(-inf, 0));
+        assert.deepEqual(iintersection(int(0, inf), int(100, inf)), int(100, inf));
+        assert.deepEqual(iintersection(int(-inf, 0), int(0, inf)), int(0, 0));
+        assert.deepEqual(iintersection(int(-inf, 1), int(-1, inf)), int(-1, 1));
     });
 
     it("FULL and another", () => {
         // semi infinite
-        assert.deepEqual(nsf.iintersection(int(-inf, 0), nsf.FULL), int(-inf, 0));
-        assert.deepEqual(nsf.iintersection(int(0, inf), nsf.FULL), int(0, inf));
+        assert.deepEqual(iintersection(int(-inf, 0), IFULL), int(-inf, 0));
+        assert.deepEqual(iintersection(int(0, inf), IFULL), int(0, inf));
 
         // real
-        assert.deepEqual(nsf.iintersection(int(1, 2), nsf.FULL), int(1, 2));
+        assert.deepEqual(iintersection(int(1, 2), IFULL), int(1, 2));
 
         // full
-        assert.deepEqual(nsf.iintersection(nsf.FULL, nsf.FULL), nsf.FULL);
+        assert.deepEqual(iintersection(IFULL, IFULL), IFULL);
     });
 });
 
@@ -163,7 +168,7 @@ describe("intersection of unions", () => {
     });
 
     it("infinite or empty unions", () => {
-        const full = nsf.union([nsf.FULL]);
+        const full = IFULL;
         const empty = nsf.EMPTY;
         const A = nsf.union([int(-inf, 0), int(10, 11), int(10000, 10001)]);
 
@@ -192,8 +197,8 @@ describe("complement of a union", () => {
             nsf.union([int(-inf, 3), int(8, inf)])
         );
 
-        assert.deepEqual(nsf.complement(nsf.union([int(0, 0)])), nsf.union([nsf.FULL]));
-        assert.deepEqual(nsf.complement(nsf.union([int(0, 0), int(1, 1)])), nsf.union([nsf.FULL]));
+        assert.deepEqual(nsf.complement(nsf.union([int(0, 0)])), nsf.union([IFULL]));
+        assert.deepEqual(nsf.complement(nsf.union([int(0, 0), int(1, 1)])), nsf.union([IFULL]));
 
         assert.deepEqual(
             nsf.complement(nsf.union([int(3, 8), int(12, 13), int(15, 16), int(17, 18)])),
@@ -209,7 +214,7 @@ describe("complement of a union", () => {
     });
 
     it("empty or full", () => {
-        assert.deepEqual(nsf.complement(nsf.union([nsf.FULL])), nsf.EMPTY);
-        assert.deepEqual(nsf.complement(nsf.EMPTY), nsf.union([nsf.FULL]));
+        assert.deepEqual(nsf.complement(nsf.union([IFULL])), nsf.EMPTY);
+        assert.deepEqual(nsf.complement(nsf.EMPTY), nsf.union([IFULL]));
     });
 });

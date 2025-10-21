@@ -15,9 +15,9 @@ Arithmetic** over IEEE 754 double precision floats (JS numbers).
 ```typescript
 import * as nsf from "not-so-float";
 
-const X = nsf.union([nsf.inter(-10, -1), nsf.inter(100, 120)]);
-const Y = nsf.union([nsf.inter(-10, 2)]);
-const Q = nsf.udiv(X, Y);
+const X = nsf.union([nsf.interval(-10, -1), nsf.interval(100, 120)]);
+const Y = nsf.union([nsf.interval(-10, 2)]);
+const Q = nsf.div(X, Y);
 
 console.log(`(${X.toString()}) / ${Y.toString()} = ${Q.toString()}`);
 ```
@@ -112,16 +112,16 @@ interval represents:
 Where $a$ and $b$ are real IEEE 754 values (not infinite).  
 The special case when both bounds are equal is called a _degenerate_ interval.
 
-To construct an interval, use the `nsf.inter()` function:
+To construct an interval, use the `nsf.interval()` function:
 
 ```typescript
-nsf.inter(a: number, b: number) : Interval
+nsf.interval(a: number, b: number) : Interval
 ```
 
 For example:
 
 ```typescript
-> I = nsf.inter(0, 6)
+> I = nsf.interval(0, 6)
 Interval { lo: 0, hi: 6 }
 ```
 
@@ -178,6 +178,17 @@ For example:
 > U.intervals
 [ Interval { lo: 1, hi: 2 }, Interval { lo: 4, hi: 6 } ]
 ```
+
+You can also use the shorthand `nsf.single()` to construct a singleton, i.e. a union with a single interval:
+
+```typescript
+const U = nsf.single(-0.1, 0.1);
+```
+
+Constants are also provided:
+
+-   `FULL`: all real numbers
+-   `EMPTY`: the empty union
 
 ## Set theory
 
@@ -244,5 +255,3 @@ function complement(A: Union | Interval): Union;
 ## Future improvements
 
 -   Support multiple rounding modes
--   Add shortcut function for `nsf.union(nsf.inter([x]))`
--   Change FULL constant to Union

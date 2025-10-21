@@ -70,15 +70,11 @@ export function interval(a: number, b?: number): Interval {
     return new Interval(a, b);
 }
 
-export const inter = interval; // alias
-
-// The full interval [-∞, ∞]
-// All non NaN IEEE floating point numbers are inside the full interval, including infinities
-export const FULL: Interval = new Interval(-Infinity, Infinity);
-
 export function typeCheckIsInterval(x: any): x is Interval {
     if (!(x instanceof Interval)) {
         throw TypeError(`Argument must be an interval (got type ${typeof x})`);
     }
     return true;
 }
+
+export const IFULL = new Interval(-Infinity, Infinity);

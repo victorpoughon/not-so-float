@@ -1,5 +1,5 @@
 import { prev, next } from "./nextafter.ts";
-import { Interval, defaultNumbers, typeCheckIsInterval } from "./interval.ts";
+import { Interval, interval, defaultNumbers, typeCheckIsInterval } from "./interval.ts";
 
 export class Union {
     constructor(readonly intervals: Interval[]) {}
@@ -151,9 +151,18 @@ export function makeBinaryOpEither(op: BinaryOpUnion): BinaryOpEither {
     };
 }
 
+// Create a singleton: a union with a single interval
+export function single(a: number, b?: number): Union {
+    if (typeof b === "undefined") {
+        b = a;
+    }
+    return union([interval(a, b)]);
+}
+
+// Create a singleton that bounds a number
 export function bounded(x: number): Union {
-    return new Union([new Interval(prev(x), next(x))]);
+    return single(prev(x), next(x));
 }
 
 export const EMPTY = new Union([]);
-export const UFULL = new Union([new Interval(-Infinity, Infinity)]);
+export const FULL = new Union([new Interval(-Infinity, Infinity)]);

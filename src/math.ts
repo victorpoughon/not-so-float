@@ -1,10 +1,10 @@
 import { prev, next } from "./nextafter.ts";
-import { Interval, FULL, typeCheckIsInterval } from "./interval.ts";
+import { Interval, IFULL, typeCheckIsInterval } from "./interval.ts";
 import {
     Union,
     union,
     EMPTY,
-    UFULL,
+    FULL,
     toUnion,
     typeCheckIsIntervalOrUnion,
     typeCheckIsUnion,
@@ -200,7 +200,7 @@ export const sqinv = makeUnaryOpEither(usqinv);
 
 export function upowIntInv(U: Union, n: number): Union {
     if (n === 0) {
-        if (U.contains(1)) return UFULL;
+        if (U.contains(1)) return FULL;
         else return EMPTY;
     }
 
@@ -256,11 +256,6 @@ function ipowOddInv(X: Interval, n: number): Interval {
 function upowOddInv(U: Union, n: number): Union {
     typeCheckIsUnion(U);
     return new Union(U.intervals.map((X) => ipowOddInv(X, n)));
-}
-
-export function powOddInv(A: Interval | Union, n: number): Union {
-    typeCheckIsIntervalOrUnion(A);
-    return upowOddInv(toUnion(A), n);
 }
 
 // x = y^(1/n) with n even and positive, and y positive

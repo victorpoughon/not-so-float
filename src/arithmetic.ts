@@ -1,11 +1,13 @@
-import { Interval, FULL, inter, typeCheckIsInterval } from "./interval.ts";
+import { Interval, IFULL, interval, typeCheckIsInterval } from "./interval.ts";
 import {
     Union,
     union,
+    single,
     typeCheckIsUnion,
     makeBinaryOpUnion,
     makeBinaryOpEither,
     EMPTY,
+    FULL,
 } from "./union.ts";
 import { prev, next } from "./nextafter.ts";
 
@@ -169,7 +171,7 @@ export function idiv(x: Interval, y: Interval): Union {
         return EMPTY;
     }
     if (xType === IType.Z) {
-        return union([inter(0, 0)]);
+        return single(0);
     }
 
     const [a, b] = [x.lo, x.hi];
@@ -193,7 +195,7 @@ export function idiv(x: Interval, y: Interval): Union {
         } else if (xType === IType.P0) {
             return union([new Interval(0, Infinity)]); // P0 / P0
         } else if (xType === IType.M) {
-            return union([FULL]); // M / P0
+            return FULL; // M / P0
         } else if (xType === IType.N0) {
             return union([new Interval(-Infinity, -0)]); // N0 / P0
         } else {
@@ -214,7 +216,7 @@ export function idiv(x: Interval, y: Interval): Union {
             // P0 / M
             // M / M
             // N0 / M
-            return union([FULL]);
+            return FULL;
         }
     } else if (yType === IType.N0) {
         if (xType === IType.P1) {
@@ -222,7 +224,7 @@ export function idiv(x: Interval, y: Interval): Union {
         } else if (xType === IType.P0) {
             return union([new Interval(-Infinity, -0)]); // P0 / N0
         } else if (xType === IType.M) {
-            return union([FULL]); // M / N0
+            return FULL; // M / N0
         } else if (xType === IType.N0) {
             return union([new Interval(0, Infinity)]); // N0 / N0
         } else {

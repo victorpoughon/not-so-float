@@ -17,10 +17,10 @@ function ordered(U: nsf.Union): boolean {
 describe("union", () => {
     it("union creation", () => {
         assert.ok(ordered(nsf.union([])));
-        assert.ok(ordered(nsf.union([nsf.inter(-Infinity, Infinity)])));
-        assert.ok(ordered(nsf.union([nsf.inter(0, 0)])));
-        assert.ok(ordered(nsf.union([nsf.inter(1, 2), nsf.inter(4, 10)])));
-        assert.ok(ordered(nsf.union([nsf.inter(1, 2), nsf.inter(-10, -5)])));
-        assert.ok(ordered(nsf.union([nsf.inter(1, 2), nsf.inter(-5, 5)])));
+        assert.ok(ordered(nsf.union([nsf.interval(-Infinity, Infinity)])));
+        assert.ok(ordered(nsf.union([nsf.interval(0, 0)])));
+        assert.ok(ordered(nsf.union([nsf.interval(1, 2), nsf.interval(4, 10)])));
+        assert.ok(ordered(nsf.union([nsf.interval(1, 2), nsf.interval(-10, -5)])));
+        assert.ok(ordered(nsf.union([nsf.interval(1, 2), nsf.interval(-5, 5)])));
     });
 });

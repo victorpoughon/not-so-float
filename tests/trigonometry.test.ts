@@ -41,7 +41,7 @@ function checkTrig(freal: (x: number) => number, X: nsf.Union, result: nsf.Union
 }
 
 // short names for compact test cases
-const int = nsf.inter;
+const int = nsf.single;
 const prev = nsf.prev;
 const next = nsf.next;
 const pi = Math.PI;
@@ -51,8 +51,8 @@ const costhirdpi = Math.cos(Math.PI / 3);
 const cosfourthpi = Math.cos(Math.PI / 4);
 
 describe("cos", () => {
-    const expectCos = (X: nsf.Interval, expected: nsf.Interval) =>
-        expectTrig(nsf.cos, Math.cos, nsf.union([X]), nsf.union([expected]), true);
+    const expectCos = (X: nsf.Union, expected: nsf.Union) =>
+        expectTrig(nsf.cos, Math.cos, X, expected, true);
 
     const checkCos = (X: nsf.Union) => expectTrig(nsf.cos, Math.cos, X, null, true);
 
@@ -127,8 +127,8 @@ describe("cos", () => {
 });
 
 describe("sin", () => {
-    const expectSin = (X: nsf.Interval, expected: nsf.Interval) =>
-        expectTrig(nsf.sin, Math.sin, nsf.union([X]), nsf.union([expected]), true);
+    const expectSin = (X: nsf.Union, expected: nsf.Union) =>
+        expectTrig(nsf.sin, Math.sin, X, expected, true);
 
     const checkSin = (X: nsf.Union) => expectTrig(nsf.sin, Math.sin, X, null, true);
 
@@ -194,8 +194,8 @@ describe("sin", () => {
 });
 
 describe("tan", () => {
-    const expectTan = (X: nsf.Interval, expected: nsf.Interval) =>
-        expectTrig(nsf.tan, Math.tan, nsf.union([X]), nsf.union([expected]), false);
+    const expectTan = (X: nsf.Union, expected: nsf.Union) =>
+        expectTrig(nsf.tan, Math.tan, X, expected, false);
 
     const checkTan = (X: nsf.Union) => expectTrig(nsf.tan, Math.tan, X, null, false);
 

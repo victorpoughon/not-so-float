@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import * as nsf from "../src/index.ts";
+import { IFULL } from "../src/interval.ts";
 import {
     realIntervals,
     semiInfiniteIntervals,
@@ -23,7 +24,7 @@ describe("interval class functions", () => {
             assert(!i.contains(nsf.prev(i.lo)));
             assert(!i.contains(nsf.next(i.hi)));
 
-            assert(!i.superset(nsf.FULL));
+            assert(!i.superset(IFULL));
             assert(i.superset(i));
             assert(i.subset(i));
             assert(i.superset(nsf.interval(i.lo, i.hi)));
@@ -42,7 +43,7 @@ describe("interval class functions", () => {
             assert(i.contains(nsf.next(i.lo)));
             assert(i.contains(nsf.prev(i.hi)));
 
-            assert(!i.superset(nsf.FULL));
+            assert(!i.superset(IFULL));
             assert(i.superset(i));
             assert(i.subset(i));
             assert(i.superset(nsf.interval(i.lo, i.hi)));
@@ -65,7 +66,7 @@ describe("interval class functions", () => {
             assert(!i.contains(nsf.next(i.hi)));
             assert(!i.contains(nsf.prev(i.hi)));
 
-            assert(!i.superset(nsf.FULL));
+            assert(!i.superset(IFULL));
             assert(i.superset(i));
             assert(i.subset(i));
         });
@@ -99,7 +100,7 @@ describe("interval class functions", () => {
     });
 
     it("full interval", () => {
-        const i = nsf.FULL;
+        const i = IFULL;
 
         assert(i.isFull());
         assert(!i.isFinite());
@@ -113,7 +114,7 @@ describe("interval class functions", () => {
         assert(i.contains(nsf.prev(i.lo)));
         assert(i.contains(nsf.next(i.hi)));
 
-        assert(i.superset(nsf.FULL));
+        assert(i.superset(IFULL));
         assert(i.superset(i));
         assert(i.subset(i));
         assert(i.superset(nsf.interval(i.lo, i.hi)));
