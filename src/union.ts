@@ -30,6 +30,11 @@ export class Union {
         return this.intervals.some((i) => i.contains(value));
     }
 
+    public hull(): Union {
+        if (this.isEmpty()) return EMPTY;
+        return single(this.lower(), this.upper());
+    }
+
     public forEach(callback: (x: Interval, index: number) => void) {
         this.intervals.forEach(callback);
     }

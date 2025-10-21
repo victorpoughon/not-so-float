@@ -133,6 +133,7 @@ class Interval {
     isFinite(): boolean;
     isDegenerate(): boolean;
     contains(value: number): boolean;
+    hull(): Union;
     superset(other: Interval): boolean;
     subset(other: Interval): boolean;
     toString(numbers?: (x: number) => string): string;
