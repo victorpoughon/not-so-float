@@ -8,6 +8,7 @@ import {
     makeBinaryOpEither,
     EMPTY,
     FULL,
+    makeUnaryOpEither,
 } from "./union.ts";
 import { prev, next } from "./nextafter.ts";
 
@@ -254,6 +255,8 @@ export function uneg(U: Union): Union {
     typeCheckIsUnion(U);
     return new Union(U.intervals.slice().reverse().map(ineg));
 }
+
+export const neg = makeUnaryOpEither(uneg);
 
 export const add = makeBinaryOpEither(uadd);
 export const sub = makeBinaryOpEither(usub);
