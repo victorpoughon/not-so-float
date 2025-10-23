@@ -164,6 +164,8 @@ class Union {
     lower(): number;
     upper(): number;
     contains(value: number): boolean;
+    subset(other: Union): boolean;
+    superset(other: Union): boolean;
     forEach(callback: (x: Interval, index: number) => void): void;
     toString(numbers?: (x: number) => string): string;
     print(): void;
