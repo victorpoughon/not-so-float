@@ -30,6 +30,18 @@ export class Union {
         return this.intervals.some((i) => i.contains(value));
     }
 
+    public subset(other: Union): boolean {
+        return this.intervals.every((thisInterval) =>
+            other.intervals.some((otherInterval) => thisInterval.subset(otherInterval))
+        );
+    }
+
+    public superset(other: Union): boolean {
+        return other.intervals.every((otherInterval) =>
+            this.intervals.some((thisInterval) => thisInterval.superset(otherInterval))
+        );
+    }
+
     public hull(): Union {
         if (this.isEmpty()) return EMPTY;
         return single(this.lower(), this.upper());
