@@ -16,12 +16,24 @@ function ordered(U: nsf.Union): boolean {
 
 describe("union", () => {
     it("union creation", () => {
+        // From a list of intervals
         assert.ok(ordered(nsf.union([])));
         assert.ok(ordered(nsf.union([nsf.interval(-Infinity, Infinity)])));
         assert.ok(ordered(nsf.union([nsf.interval(0, 0)])));
         assert.ok(ordered(nsf.union([nsf.interval(1, 2), nsf.interval(4, 10)])));
         assert.ok(ordered(nsf.union([nsf.interval(1, 2), nsf.interval(-10, -5)])));
         assert.ok(ordered(nsf.union([nsf.interval(1, 2), nsf.interval(-5, 5)])));
+
+        // From a list of unions
+        const a = nsf.union([nsf.interval(0, 0)]);
+        const b = nsf.union([nsf.interval(1, 2), nsf.interval(4, 10)]);
+        const c = nsf.union([nsf.interval(1, 2), nsf.interval(-10, -5)]);
+        const d = nsf.union([nsf.interval(10000, Infinity)]);
+
+        assert.ok(ordered(nsf.union([a, b, c, d])));
+
+        // Mix of intervals and unions
+        assert.ok(ordered(nsf.union([a, b, nsf.interval(5, 6), nsf.interval(-1000, -500)])));
     });
 
     it("union contains", () => {

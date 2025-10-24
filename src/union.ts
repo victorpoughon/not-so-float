@@ -61,9 +61,14 @@ export class Union {
     }
 }
 
-// Construct a union
+// Construct a union from a list of intervals or unions
+export function union(list: (Interval | Union)[]): Union {
+    const intervals = list.map((e) => (e instanceof Interval ? e : e.intervals)).flat();
+    return iunion(intervals);
+}
+
 // Minimum disjoint set of a list of intervals
-export function union(intervals: Interval[]): Union {
+function iunion(intervals: Interval[]): Union {
     if (intervals.length <= 1) {
         return new Union(intervals);
     }
