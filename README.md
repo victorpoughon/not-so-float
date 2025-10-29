@@ -161,11 +161,13 @@ Union class member functions:
 class Union {
     isEmpty(): boolean;
     isFull(): boolean;
+    isFinite(): boolean;
     lower(): number;
     upper(): number;
     contains(value: number): boolean;
     subset(other: Union): boolean;
     superset(other: Union): boolean;
+    hull(): Union;
     forEach(callback: (x: Interval, index: number) => void): void;
     toString(numbers?: (x: number) => string): string;
     print(): void;

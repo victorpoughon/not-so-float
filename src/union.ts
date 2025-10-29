@@ -16,6 +16,14 @@ export class Union {
         );
     }
 
+    public isFinite(): boolean {
+        return (
+            this.isEmpty() ||
+            (this.intervals[0].lo !== -Infinity &&
+                this.intervals[this.intervals.length - 1].hi !== Infinity)
+        );
+    }
+
     public lower(): number {
         if (this.isEmpty()) return Infinity;
         return this.intervals[0].lo;

@@ -66,4 +66,14 @@ describe("union", () => {
         assert.ok(a.superset(nsf.union([nsf.interval(2, 3), nsf.interval(5, 6)])));
         assert.ok(nsf.FULL.superset(nsf.EMPTY));
     });
+
+    it("union isFinite", () => {
+        assert.ok(nsf.EMPTY.isFinite());
+        assert.ok(nsf.single(0, 1).isFinite());
+        assert.ok(nsf.union([nsf.single(0, 1), nsf.single(4, 5)]).isFinite());
+        assert.ok(!nsf.union([nsf.single(-Infinity, 1), nsf.single(4, 5)]).isFinite());
+        assert.ok(!nsf.union([nsf.single(-1000, 1), nsf.single(4, Infinity)]).isFinite());
+        assert.ok(!nsf.union([nsf.single(-Infinity, 1), nsf.single(4, Infinity)]).isFinite());
+        assert.ok(!nsf.FULL.isFinite());
+    });
 });
