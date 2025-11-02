@@ -136,6 +136,7 @@ class Interval {
     hull(): Union;
     superset(other: Interval): boolean;
     subset(other: Interval): boolean;
+    width(): number;
     toString(numbers?: (x: number) => string): string;
     print(): void;
 }
@@ -168,6 +169,7 @@ class Union {
     subset(other: Union): boolean;
     superset(other: Union): boolean;
     hull(): Union;
+    width(): number;
     forEach(callback: (x: Interval, index: number) => void): void;
     toString(numbers?: (x: number) => string): string;
     print(): void;

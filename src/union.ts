@@ -55,6 +55,10 @@ export class Union {
         return single(this.lower(), this.upper());
     }
 
+    public width(): number {
+        return this.intervals.reduce((acc, interval) => acc + interval.width(), 0);
+    }
+
     public forEach(callback: (x: Interval, index: number) => void) {
         this.intervals.forEach(callback);
     }

@@ -119,4 +119,15 @@ describe("interval class functions", () => {
         assert(i.subset(i));
         assert(i.superset(nsf.interval(i.lo, i.hi)));
     });
+
+    it("Interval.width()", () => {
+        assert.deepEqual(nsf.interval(0, 0).width(), 0);
+        assert.deepEqual(nsf.interval(1, 1).width(), 0);
+        assert.deepEqual(nsf.interval(1e50, 1e50).width(), 0);
+        assert.deepEqual(nsf.interval(-1e50, -1e50).width(), 0);
+
+        assert.deepEqual(nsf.interval(1, 2).width(), 1);
+        assert.deepEqual(nsf.interval(0.00001, 0.00002).width(), 0.00002 - 0.00001);
+        assert.deepEqual(nsf.interval(-Number.MAX_VALUE, Number.MAX_VALUE).width(), Infinity);
+    });
 });

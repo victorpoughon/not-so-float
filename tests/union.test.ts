@@ -76,4 +76,18 @@ describe("union", () => {
         assert.ok(!nsf.union([nsf.single(-Infinity, 1), nsf.single(4, Infinity)]).isFinite());
         assert.ok(!nsf.FULL.isFinite());
     });
+
+    it("Union.width()", () => {
+        assert.deepEqual(nsf.EMPTY.width(), 0);
+        assert.deepEqual(nsf.union([nsf.single(0, 0), nsf.single(1, 1)]).width(), 0);
+
+        assert.deepEqual(nsf.union([nsf.single(0, 1), nsf.single(2, 10)]).width(), 9);
+
+        assert.deepEqual(
+            nsf.union([nsf.single(-100, 0), nsf.single(0, Infinity)]).width(),
+            Infinity
+        );
+
+        assert.deepEqual(nsf.FULL.width(), Infinity);
+    });
 });

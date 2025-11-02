@@ -27,6 +27,10 @@ export class Interval {
         return other.superset(this);
     }
 
+    public width() : number {
+        return this.hi - this.lo;
+    }
+
     public toString(numbers: (x: number) => string = defaultNumbers): string {
         return `[${numbers(this.lo)}, ${numbers(this.hi)}]`;
     }
