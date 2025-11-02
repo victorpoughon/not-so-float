@@ -57,8 +57,7 @@ function rightCos(x: number): number {
 export function icos(X: Interval): Union {
     typeCheckIsInterval(X);
 
-    const width = X.hi - X.lo;
-    if (width >= 2 * Math.PI) return new Union([new Interval(-1, 1)]);
+    if (X.width() >= 2 * Math.PI) return new Union([new Interval(-1, 1)]);
 
     const candidates = [X.lo, X.hi, ...piMultiples(X).map((x) => x * pi)];
 
@@ -86,8 +85,7 @@ function rightSin(x: number): number {
 export function isin(X: Interval): Union {
     typeCheckIsInterval(X);
 
-    const width = X.hi - X.lo;
-    if (width >= 2 * Math.PI) return new Union([new Interval(-1, 1)]);
+    if (X.width() >= 2 * Math.PI) return new Union([new Interval(-1, 1)]);
 
     const candidates = [X.lo, X.hi, ...halfPiMultiples(X).map((x) => halfpi + x * pi)];
 
