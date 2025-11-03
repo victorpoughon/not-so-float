@@ -34,21 +34,34 @@ describe("math functions", () => {
     });
 
     it("pow (integer exponent)", () => {
+        // Exponent = 0
+        assert.deepEqual(nsf.powInt(uint(5, 5), 0), uint(1, 1));
+
+        // Exponent = 1
+        // TODO
+
+        // Exponent = 2
         assert.deepEqual(nsf.powInt(uint(-inf, 0), 2), uint(0, inf));
         assert.deepEqual(nsf.powInt(uint(-2, 2), 2), uint(0, next(4)));
         assert.deepEqual(nsf.powInt(uint(1, 2), 2), uint(prev(1), next(4)));
-
-        assert.deepEqual(nsf.powInt(uint(-inf, 0), 3), uint(-inf, 0));
-        assert.deepEqual(nsf.powInt(uint(-2, 2), 3), uint(prev(-8), next(8)));
-        assert.deepEqual(nsf.powInt(uint(1, 2), 3), uint(prev(1), next(8)));
-
-        assert.deepEqual(nsf.powInt(uint(5, 5), 0), uint(1, 1));
         assert.deepEqual(nsf.powInt(uint(-3, 5), 2), uint(0, next(25)));
         assert.deepEqual(nsf.powInt(uint(0, 5), 2), uint(0, next(25)));
         assert.deepEqual(nsf.powInt(uint(3, 5), 2), uint(prev(9), next(25)));
         assert.deepEqual(nsf.powInt(uint(-3, 1), 2), uint(0, next(9)));
 
-        // TODO negative exponent
+        // Exponent = 3
+        assert.deepEqual(nsf.powInt(uint(-inf, 0), 3), uint(-inf, 0));
+        assert.deepEqual(nsf.powInt(uint(-2, 2), 3), uint(prev(-8), next(8)));
+        assert.deepEqual(nsf.powInt(uint(1, 2), 3), uint(prev(1), next(8)));
+
+        // Exponent = -1
+        // TODO
+
+        // Exponent = -2
+        // TODO
+
+        // Exponent = -3
+        // TODO
     });
 
     it("pow (union exponent)", () => {
