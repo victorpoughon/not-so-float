@@ -2,7 +2,6 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import * as nsf from "../src/index.ts";
-import { sampleInterval, sampleUnion } from "./testIntervals.ts";
 
 const int = nsf.interval;
 const uint = nsf.single;
@@ -34,7 +33,7 @@ describe("math functions", () => {
         assert.deepEqual(nsf.log(uint(1, 2)), uint(0, next(Math.log(2))));
     });
 
-    it("pow (int)", () => {
+    it("pow (integer exponent)", () => {
         assert.deepEqual(nsf.powInt(uint(-inf, 0), 2), uint(0, inf));
         assert.deepEqual(nsf.powInt(uint(-2, 2), 2), uint(0, next(4)));
         assert.deepEqual(nsf.powInt(uint(1, 2), 2), uint(prev(1), next(4)));
@@ -48,11 +47,195 @@ describe("math functions", () => {
         assert.deepEqual(nsf.powInt(uint(0, 5), 2), uint(0, next(25)));
         assert.deepEqual(nsf.powInt(uint(3, 5), 2), uint(prev(9), next(25)));
         assert.deepEqual(nsf.powInt(uint(-3, 1), 2), uint(0, next(9)));
+
+        // TODO negative exponent
     });
 
-    it("pow (interval/union)", () => {
-        // TODO tough to test properly because it's implemented as the
-        // composition of exp and log, which means multiple calls to prev/next.
+    it("pow (union exponent)", () => {
+        const zero = nsf.single(0, 0);
+        const one = nsf.single(1, 1);
+
+        // Strictly negative base
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(-Infinity, -1)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(-2, -1)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(-1, -1)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(-1, 0)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(0, 0)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(-1, 1)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(0, 1)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(1, 1)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(1, 2)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(1, Infinity)), nsf.EMPTY);
+        assert.deepEqual(nsf.pow(nsf.single(-10, -5), nsf.single(-Infinity, Infinity)), nsf.EMPTY);
+
+        // Negative or zero base
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(-Infinity, -1)), zero);
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(-2, -1)), zero);
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(-1, -1)), zero);
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(-1, 0)), union([zero, one]));
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(0, 0)), one);
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(-1, 1)), union([zero, one]));
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(0, 1)), union([zero, one]));
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(1, 1)), zero);
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(1, 2)), zero);
+        assert.deepEqual(nsf.pow(nsf.single(-10, 0), nsf.single(1, Infinity)), zero);
+        assert.deepEqual(
+            nsf.pow(nsf.single(-10, 0), nsf.single(-Infinity, Infinity)),
+            union([zero, one])
+        );
+
+        // Degenerate zero base
+        assert.deepEqual(nsf.pow(zero, nsf.single(-Infinity, -1)), zero);
+        assert.deepEqual(nsf.pow(zero, nsf.single(-2, -1)), zero);
+        assert.deepEqual(nsf.pow(zero, nsf.single(-1, -1)), zero);
+        assert.deepEqual(nsf.pow(zero, nsf.single(-1, 0)), union([zero, one]));
+        assert.deepEqual(nsf.pow(zero, nsf.single(0, 0)), one);
+        assert.deepEqual(nsf.pow(zero, nsf.single(-1, 1)), union([zero, one]));
+        assert.deepEqual(nsf.pow(zero, nsf.single(0, 1)), union([zero, one]));
+        assert.deepEqual(nsf.pow(zero, nsf.single(1, 1)), zero);
+        assert.deepEqual(nsf.pow(zero, nsf.single(1, 2)), zero);
+        assert.deepEqual(nsf.pow(zero, nsf.single(1, Infinity)), zero);
+        assert.deepEqual(nsf.pow(zero, nsf.single(-Infinity, Infinity)), union([zero, one]));
+
+        // Mixed base
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(-Infinity, -1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(-Infinity, -1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(-2, -1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(-2, -1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(-1, -1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(-1, -1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(-1, 0)),
+            union([zero, one, nsf.exp(nsf.mul(nsf.single(-1, 0), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(nsf.pow(nsf.single(-2, 2), nsf.single(0, 0)), one);
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(-1, 1)),
+            union([zero, one, nsf.exp(nsf.mul(nsf.single(-1, 1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(0, 1)),
+            union([zero, one, nsf.exp(nsf.mul(nsf.single(0, 1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(1, 1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(1, 1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(1, 2)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(1, 2), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(1, Infinity)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(1, Infinity), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(-2, 2), nsf.single(-Infinity, Infinity)),
+            union([
+                zero,
+                one,
+                nsf.exp(nsf.mul(nsf.single(-Infinity, Infinity), nsf.log(nsf.single(0, 2)))),
+            ])
+        );
+
+        // Positive or zero base
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(-Infinity, -1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(-Infinity, -1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(-2, -1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(-2, -1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(-1, -1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(-1, -1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(-1, 0)),
+            union([zero, one, nsf.exp(nsf.mul(nsf.single(-1, 0), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(nsf.pow(nsf.single(0, 2), nsf.single(0, 0)), one);
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(-1, 1)),
+            union([zero, one, nsf.exp(nsf.mul(nsf.single(-1, 1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(0, 1)),
+            union([zero, one, nsf.exp(nsf.mul(nsf.single(0, 1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(1, 1)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(1, 1), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(1, 2)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(1, 2), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(1, Infinity)),
+            union([zero, nsf.exp(nsf.mul(nsf.single(1, Infinity), nsf.log(nsf.single(0, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(0, 2), nsf.single(-Infinity, Infinity)),
+            union([
+                zero,
+                one,
+                nsf.exp(nsf.mul(nsf.single(-Infinity, Infinity), nsf.log(nsf.single(0, 2)))),
+            ])
+        );
+
+        // Strictly positive base
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(-Infinity, -1)),
+            union([nsf.exp(nsf.mul(nsf.single(-Infinity, -1), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(-2, -1)),
+            union([nsf.exp(nsf.mul(nsf.single(-2, -1), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(-1, -1)),
+            union([nsf.exp(nsf.mul(nsf.single(-1, -1), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(-1, 0)),
+            union([one, nsf.exp(nsf.mul(nsf.single(-1, 0), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(nsf.pow(nsf.single(1, 2), nsf.single(0, 0)), one);
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(-1, 1)),
+            union([one, nsf.exp(nsf.mul(nsf.single(-1, 1), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(0, 1)),
+            union([one, nsf.exp(nsf.mul(nsf.single(0, 1), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(1, 1)),
+            union([nsf.exp(nsf.mul(nsf.single(1, 1), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(1, 2)),
+            union([nsf.exp(nsf.mul(nsf.single(1, 2), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(1, Infinity)),
+            union([nsf.exp(nsf.mul(nsf.single(1, Infinity), nsf.log(nsf.single(1, 2))))])
+        );
+        assert.deepEqual(
+            nsf.pow(nsf.single(1, 2), nsf.single(-Infinity, Infinity)),
+            union([
+                one,
+                nsf.exp(nsf.mul(nsf.single(-Infinity, Infinity), nsf.log(nsf.single(1, 2)))),
+            ])
+        );
     });
 
     it("sqrt", () => {

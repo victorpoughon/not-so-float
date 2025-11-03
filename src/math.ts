@@ -12,6 +12,7 @@ import {
     makeUnaryOpEither,
     makeBinaryOpUnion,
     makeBinaryOpEither,
+    single,
 } from "./union.ts";
 import { idiv, div, umul, ineg, uneg } from "./arithmetic.ts";
 
@@ -148,9 +149,18 @@ export function powInt(A: Interval | Union, n: number): Union {
 
 // pow: exponentiation with a real exponent
 
-export function ipow(X: Interval, Y: Interval): Union {
-    if (X.hi <= 0) return new Union([]);
-    return uexp(umul(new Union([Y]), ilog(X)));
+function zeroPow(exponent: Interval): Union {
+    if (exponent.lo === 0 && exponent.hi === 0) return single(1, 1);
+    if (exponent.contains(0)) return union([single(0, 0), single(1, 1)]);
+    return single(0, 0);
+}
+
+export function ipow(base: Interval, exponent: Interval): Union {
+    if (base.hi < 0) return EMPTY;
+    if (base.hi === 0) return zeroPow(exponent);
+    const expLog = uexp(umul(union([exponent]), ilog(base)));
+    if (base.contains(0)) return union([zeroPow(exponent), expLog]);
+    return expLog;
 }
 
 export const upow = makeBinaryOpUnion(ipow);
@@ -220,7 +230,7 @@ export function upowIntInv(U: Union, n: number): Union {
     if (U.lower() === 0 && U.upper() === 0) {
         return EMPTY;
     }
-    
+
     const one = new Union([new Interval(1, 1)]);
     return div(one, upowIntInv(U, -n));
 }
