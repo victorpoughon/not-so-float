@@ -14,8 +14,8 @@ function ordered(U: nsf.Union): boolean {
     return true;
 }
 
-describe("union", () => {
-    it("union creation", () => {
+describe("Union", () => {
+    it("Union creation", () => {
         // From a list of intervals
         assert.ok(ordered(nsf.union([])));
         assert.ok(ordered(nsf.union([nsf.interval(-Infinity, Infinity)])));
@@ -36,7 +36,7 @@ describe("union", () => {
         assert.ok(ordered(nsf.union([a, b, nsf.interval(5, 6), nsf.interval(-1000, -500)])));
     });
 
-    it("union contains", () => {
+    it("Union.contains()", () => {
         const a = nsf.union([nsf.interval(0, 10), nsf.interval(50, 60)]);
         assert.ok(!nsf.EMPTY.contains(0));
         assert.ok(a.contains(0));
@@ -50,7 +50,7 @@ describe("union", () => {
         assert.ok(!a.contains(15));
     });
 
-    it("union subset", () => {
+    it("Union.subset()", () => {
         const a = nsf.union([nsf.interval(0, 10), nsf.interval(50, 60)]);
         assert.ok(a.subset(nsf.single(0, 100)));
         assert.ok(a.subset(nsf.FULL));
@@ -59,7 +59,7 @@ describe("union", () => {
         assert.ok(nsf.EMPTY.subset(nsf.FULL));
     });
 
-    it("union superset", () => {
+    it("Union.superset()", () => {
         const a = nsf.union([nsf.interval(0, 10), nsf.interval(50, 60)]);
         assert.ok(a.superset(nsf.single(0, 1)));
         assert.ok(a.superset(nsf.EMPTY));
@@ -67,7 +67,7 @@ describe("union", () => {
         assert.ok(nsf.FULL.superset(nsf.EMPTY));
     });
 
-    it("union isFinite", () => {
+    it("union.isFinite()", () => {
         assert.ok(nsf.EMPTY.isFinite());
         assert.ok(nsf.single(0, 1).isFinite());
         assert.ok(nsf.union([nsf.single(0, 1), nsf.single(4, 5)]).isFinite());
@@ -89,5 +89,21 @@ describe("union", () => {
         );
 
         assert.deepEqual(nsf.FULL.width(), Infinity);
+    });
+
+    it("Union.count()", () => {
+        assert.deepEqual(nsf.EMPTY.count(), 0);
+        assert.deepEqual(nsf.single(0, 0).count(), 1);
+        assert.deepEqual(nsf.FULL.count(), 1);
+        assert.deepEqual(nsf.union([nsf.single(0, 0), nsf.single(1, 2)]).count(), 2);
+    });
+
+    it("Union.isSingle()", () => {
+        assert.deepEqual(nsf.EMPTY.isSingle(), false);
+        assert.deepEqual(nsf.FULL.isSingle(), true);
+        assert.deepEqual(nsf.single(0, 0).isSingle(), true);
+        assert.deepEqual(nsf.single(0, 1).isSingle(), true);
+        assert.deepEqual(nsf.single(-1, 1).isSingle(), true);
+        assert.deepEqual(nsf.union([nsf.single(0, 1), nsf.single(10, 11)]).isSingle(), false);
     });
 });

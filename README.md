@@ -153,7 +153,7 @@ $$
 To construct a union, use the `nsf.union()` function:
 
 ```typescript
-nsf.union(intervals: Interval[]) : Union
+function union(list: (Interval | Union)[]): Union
 ```
 
 Union class member functions:
@@ -163,6 +163,9 @@ class Union {
     isEmpty(): boolean;
     isFull(): boolean;
     isFinite(): boolean;
+    isSingle(): boolean;
+    equalsSingle(lower: number, upper: number): boolean;
+    count(): number;
     lower(): number;
     upper(): number;
     contains(value: number): boolean;
@@ -262,3 +265,4 @@ function complement(A: Union | Interval): Union;
 ## Future improvements
 
 -   Support multiple rounding modes
+-   Improve unit test coverage

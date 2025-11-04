@@ -24,6 +24,18 @@ export class Union {
         );
     }
 
+    public isSingle(): boolean {
+        return this.intervals.length === 1;
+    }
+
+    public equalsSingle(lower: number, upper: number) {
+        return this.isSingle() && this.intervals[0].lo === lower && this.intervals[0].hi === upper;
+    }
+
+    public count(): number {
+        return this.intervals.length;
+    }
+
     public lower(): number {
         if (this.isEmpty()) return Infinity;
         return this.intervals[0].lo;
