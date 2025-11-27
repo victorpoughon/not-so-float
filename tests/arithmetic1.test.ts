@@ -156,6 +156,36 @@ describe("arithmetic operators have the inclusion property", () => {
     });
 });
 
+describe("empty union operand", () => {
+    it("add", () => {
+        assert.deepStrictEqual(nsf.EMPTY, nsf.add(nsf.single(1, 2), nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.add(nsf.FULL, nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.add(nsf.EMPTY, nsf.single(1, 2)));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.add(nsf.EMPTY, nsf.FULL));
+    });
+
+    it("sub", () => {
+        assert.deepStrictEqual(nsf.EMPTY, nsf.sub(nsf.single(1, 2), nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.sub(nsf.FULL, nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.sub(nsf.EMPTY, nsf.single(1, 2)));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.sub(nsf.EMPTY, nsf.FULL));
+    });
+
+    it("mul", () => {
+        assert.deepStrictEqual(nsf.EMPTY, nsf.mul(nsf.single(1, 2), nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.mul(nsf.FULL, nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.mul(nsf.EMPTY, nsf.single(1, 2)));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.mul(nsf.EMPTY, nsf.FULL));
+    });
+
+    it("div", () => {
+        assert.deepStrictEqual(nsf.EMPTY, nsf.div(nsf.single(1, 2), nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.div(nsf.FULL, nsf.EMPTY));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.div(nsf.EMPTY, nsf.single(1, 2)));
+        assert.deepStrictEqual(nsf.EMPTY, nsf.div(nsf.EMPTY, nsf.FULL));
+    });
+});
+
 describe("overflow tests", () => {
     const M = Number.MAX_VALUE;
     it("add", () => {
