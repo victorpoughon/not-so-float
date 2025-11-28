@@ -126,6 +126,7 @@ export function ipowInt(X: Interval, n: number): Union {
 
     if (n < 0) return idiv(new Interval(1, 1), ipowInt(X, -n).intervals[0]);
     if (n === 0) return new Union([new Interval(1, 1)]);
+    if (n === 1) return new Union([X]);
 
     if (X.lo > 0 || n % 2 !== 0) {
         return new Union([new Interval(leftPowInt(X.lo, n), rightPowInt(X.hi, n))]);
