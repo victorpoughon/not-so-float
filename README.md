@@ -248,6 +248,8 @@ function complement(A: Union | Interval): Union;
 |            Cosine | `nsf.cos(A)`   |
 |              Sine | `nsf.sin(A)`   |
 |           Tangent | `nsf.tan(A)`   |
+|            Arccos | `nsf.acos(A)`  |
+|            Arcsin | `nsf.asin(A)`  |
 
 </div>
 

@@ -1,6 +1,13 @@
 import { prev, next } from "./nextafter.ts";
 import { Interval, typeCheckIsInterval } from "./interval.ts";
-import { Union, typeCheckIsUnion, makeUnaryOpUnion, makeUnaryOpEither, bounded } from "./union.ts";
+import {
+    Union,
+    typeCheckIsUnion,
+    makeUnaryOpUnion,
+    makeUnaryOpEither,
+    bounded,
+    EMPTY,
+} from "./union.ts";
 import { udiv, usub } from "./arithmetic.ts";
 
 const pi = Math.PI;
@@ -105,3 +112,30 @@ export function utan(U: Union): Union {
 }
 
 export const tan = makeUnaryOpEither(utan);
+
+// ARCCOS
+
+export function iacos(X: Interval): Union {
+    typeCheckIsInterval(X);
+
+    if (X.lo > 1 || X.hi < -1) return EMPTY;
+    const lower = X.hi >= 1 ? 0 : prev(Math.acos(X.hi));
+    const upper = next(Math.acos(Math.max(-1, X.lo)));
+    return new Union([new Interval(lower, upper)]);
+}
+
+export const uacos = makeUnaryOpUnion(iacos);
+export const acos = makeUnaryOpEither(uacos);
+
+// ARCSIN
+
+export function iasin(X: Interval): Union {
+    typeCheckIsInterval(X);
+
+    if (X.lo > 1 || X.hi < -1) return EMPTY;
+    const [l, h] = [Math.max(-1, X.lo), Math.min(1, X.hi)];
+    return new Union([new Interval(prev(Math.asin(l)), next(Math.asin(h)))]);
+}
+
+export const uasin = makeUnaryOpUnion(iasin);
+export const asin = makeUnaryOpEither(uasin);

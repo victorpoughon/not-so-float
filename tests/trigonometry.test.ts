@@ -221,3 +221,87 @@ describe("tan", () => {
         checkTan(nsf.bounded(Math.PI / 6));
     });
 });
+
+describe("acos", () => {
+    assert.deepStrictEqual(
+        nsf.acos(nsf.single(0)),
+        nsf.single(prev(Math.acos(0)), next(Math.acos(0)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.acos(nsf.single(-0.1)),
+        nsf.single(prev(Math.acos(-0.1)), next(Math.acos(-0.1)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.acos(nsf.single(0.2)),
+        nsf.single(prev(Math.acos(0.2)), next(Math.acos(0.2)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.acos(nsf.single(0.2, 0.5)),
+        nsf.single(prev(Math.acos(0.5)), next(Math.acos(0.2)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.acos(nsf.single(-0.2, 0.5)),
+        nsf.single(prev(Math.acos(0.5)), next(Math.acos(-0.2)))
+    );
+
+    assert.deepStrictEqual(nsf.acos(nsf.single(-1.1, 1.1)), nsf.single(0, next(Math.acos(-1))));
+
+    assert.deepStrictEqual(
+        nsf.acos(nsf.single(-1.1, -0.5)),
+        nsf.single(prev(Math.acos(-0.5)), next(Math.acos(-1)))
+    );
+
+    assert.deepStrictEqual(nsf.acos(nsf.single(0.5, 1.5)), nsf.single(0, next(Math.acos(0.5))));
+
+    assert.deepStrictEqual(nsf.acos(nsf.single(-1.2, -1.1)), nsf.EMPTY);
+    assert.deepStrictEqual(nsf.acos(nsf.single(1.1, 1.2)), nsf.EMPTY);
+});
+
+describe("asin", () => {
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(0)),
+        nsf.single(prev(Math.asin(0)), next(Math.asin(0)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(-0.1)),
+        nsf.single(prev(Math.asin(-0.1)), next(Math.asin(-0.1)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(0.2)),
+        nsf.single(prev(Math.asin(0.2)), next(Math.asin(0.2)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(0.2, 0.5)),
+        nsf.single(prev(Math.asin(0.2)), next(Math.asin(0.5)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(-0.2, 0.5)),
+        nsf.single(prev(Math.asin(-0.2)), next(Math.asin(0.5)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(-1.1, 1.1)),
+        nsf.single(prev(Math.asin(-1)), next(Math.asin(1)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(-1.1, -0.5)),
+        nsf.single(prev(Math.asin(-1)), next(Math.asin(-0.5)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.asin(nsf.single(0.5, 1.5)),
+        nsf.single(prev(Math.asin(0.5)), next(Math.asin(1)))
+    );
+
+    assert.deepStrictEqual(nsf.asin(nsf.single(-1.2, -1.1)), nsf.EMPTY);
+    assert.deepStrictEqual(nsf.asin(nsf.single(1.1, 1.2)), nsf.EMPTY);
+});
