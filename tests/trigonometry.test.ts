@@ -263,10 +263,7 @@ describe("acos", () => {
 });
 
 describe("asin", () => {
-    assert.deepStrictEqual(
-        nsf.asin(nsf.single(0)),
-        nsf.single(prev(Math.asin(0)), next(Math.asin(0)))
-    );
+    assert.deepStrictEqual(nsf.asin(nsf.single(0)), nsf.single(0, 0));
 
     assert.deepStrictEqual(
         nsf.asin(nsf.single(-0.1)),
@@ -277,6 +274,9 @@ describe("asin", () => {
         nsf.asin(nsf.single(0.2)),
         nsf.single(prev(Math.asin(0.2)), next(Math.asin(0.2)))
     );
+
+    assert.deepStrictEqual(nsf.asin(nsf.single(0, 1)), nsf.single(0, next(Math.asin(1))));
+    assert.deepStrictEqual(nsf.asin(nsf.single(-1, 0)), nsf.single(prev(Math.asin(-1)), 0));
 
     assert.deepStrictEqual(
         nsf.asin(nsf.single(0.2, 0.5)),

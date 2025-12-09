@@ -129,12 +129,22 @@ export const acos = makeUnaryOpEither(uacos);
 
 // ARCSIN
 
+function leftAsin(x: number): number {
+    if (x === 0) return 0;
+    return prev(Math.asin(x));
+}
+
+function rightAsin(x: number): number {
+    if (x === 0) return 0;
+    return next(Math.asin(x));
+}
+
 export function iasin(X: Interval): Union {
     typeCheckIsInterval(X);
 
     if (X.lo > 1 || X.hi < -1) return EMPTY;
     const [l, h] = [Math.max(-1, X.lo), Math.min(1, X.hi)];
-    return new Union([new Interval(prev(Math.asin(l)), next(Math.asin(h)))]);
+    return new Union([new Interval(leftAsin(l), rightAsin(h))]);
 }
 
 export const uasin = makeUnaryOpUnion(iasin);
