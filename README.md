@@ -269,3 +269,14 @@ function complement(A: Union | Interval): Union;
 
 -   Support multiple rounding modes
 -   Improve unit test coverage
+
+## How to release
+
+Dev procedure to create a new release of `not-so-float` and publish it on npmjs:
+
+* Make sure `package.json` version is the next version number to release and follows semantic versioning
+* Make sure tests pass both locally (`npm run test`) and on GitHub CI
+* Create the release on GitHub
+* Run `git pull` locally to fetch the new tag
+* Build the release: `rm -rf dist/ && npm run build`
+* Publish: `npm publish`
