@@ -250,6 +250,7 @@ function complement(A: Union | Interval): Union;
 |           Tangent | `nsf.tan(A)`   |
 |            Arccos | `nsf.acos(A)`  |
 |            Arcsin | `nsf.asin(A)`  |
+|            Arctan | `nsf.atan(A)`  |
 
 </div>
 

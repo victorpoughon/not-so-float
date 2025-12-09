@@ -139,3 +139,23 @@ export function iasin(X: Interval): Union {
 
 export const uasin = makeUnaryOpUnion(iasin);
 export const asin = makeUnaryOpEither(uasin);
+
+// ARCTAN
+
+function leftAtan(x: number): number {
+    if (x === 0) return 0;
+    return prev(Math.atan(x));
+}
+
+function rightAtan(x: number): number {
+    if (x === 0) return 0;
+    return next(Math.atan(x));
+}
+
+export function iatan(X: Interval): Union {
+    typeCheckIsInterval(X);
+    return new Union([new Interval(leftAtan(X.lo), rightAtan(X.hi))]);
+}
+
+export const uatan = makeUnaryOpUnion(iatan);
+export const atan = makeUnaryOpEither(uatan);

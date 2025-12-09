@@ -259,6 +259,7 @@ describe("acos", () => {
 
     assert.deepStrictEqual(nsf.acos(nsf.single(-1.2, -1.1)), nsf.EMPTY);
     assert.deepStrictEqual(nsf.acos(nsf.single(1.1, 1.2)), nsf.EMPTY);
+    assert.deepStrictEqual(nsf.acos(nsf.EMPTY), nsf.EMPTY);
 });
 
 describe("asin", () => {
@@ -304,4 +305,47 @@ describe("asin", () => {
 
     assert.deepStrictEqual(nsf.asin(nsf.single(-1.2, -1.1)), nsf.EMPTY);
     assert.deepStrictEqual(nsf.asin(nsf.single(1.1, 1.2)), nsf.EMPTY);
+    assert.deepStrictEqual(nsf.asin(nsf.EMPTY), nsf.EMPTY);
+});
+
+describe("atan", () => {
+    assert.deepStrictEqual(nsf.atan(nsf.single(0)), nsf.single(0));
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(-0.1)),
+        nsf.single(prev(Math.atan(-0.1)), next(Math.atan(-0.1)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(0.2)),
+        nsf.single(prev(Math.atan(0.2)), next(Math.atan(0.2)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(0.2, 0.5)),
+        nsf.single(prev(Math.atan(0.2)), next(Math.atan(0.5)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(-0.2, 0.5)),
+        nsf.single(prev(Math.atan(-0.2)), next(Math.atan(0.5)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(-1.1, 1.1)),
+        nsf.single(prev(Math.atan(-1.1)), next(Math.atan(1.1)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(-1.1, -0.5)),
+        nsf.single(prev(Math.atan(-1.1)), next(Math.atan(-0.5)))
+    );
+
+    assert.deepStrictEqual(
+        nsf.atan(nsf.single(0.5, 1.5)),
+        nsf.single(prev(Math.atan(0.5)), next(Math.atan(1.5)))
+    );
+
+    assert.deepStrictEqual(nsf.atan(nsf.FULL), nsf.single(prev(-Math.PI / 2), next(Math.PI / 2)));
+    assert.deepStrictEqual(nsf.atan(nsf.EMPTY), nsf.EMPTY);
 });
