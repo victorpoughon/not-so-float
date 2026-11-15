@@ -210,6 +210,27 @@ describe("tan", () => {
         );
     });
 
+    it("intervals crossing a pole", () => {
+        // tan goes to +inf left of pi/2 and to -inf right of it, so the result
+        // must be split in two semi-infinite intervals
+        for (const [lo, hi] of [
+            [1.5, 1.6],
+            [-1.6, -1.5],
+            [prev(pi / 2), next(pi / 2)],
+            [1e15 + 2.25, 1e15 + 2.75],
+        ]) {
+            const result = nsf.tan(int(lo, hi));
+            assert.strictEqual(result.intervals.length, 2, `tan([${lo}, ${hi}]) = ${result}`);
+            assert.strictEqual(result.lower(), -Infinity);
+            assert.strictEqual(result.upper(), Infinity);
+            const steps = 200;
+            for (let i = 0; i <= steps; i++) {
+                const x = Math.min(hi, lo + (i / steps) * (hi - lo));
+                assert.ok(result.contains(Math.tan(x)), `tan(${x}) not in ${result}`);
+            }
+        }
+    });
+
     it("inclusion property checks", () => {
         const pi = nsf.bounded(Math.PI);
 
