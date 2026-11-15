@@ -222,6 +222,92 @@ describe("tan", () => {
     });
 });
 
+// Regression tests for https://github.com/victorpoughon/not-so-float/issues/1
+describe("sin/cos/tan with large arguments", () => {
+    // Check inclusion at evenly spaced float samples inside [lo, hi]
+    const denseCheck = (
+        f: (U: nsf.Union) => nsf.Union,
+        freal: (x: number) => number,
+        lo: number,
+        hi: number,
+    ) => {
+        const result = f(int(lo, hi));
+        assert.strictEqual(result.intervals.length, 1);
+        const steps = 200;
+        for (let i = 0; i <= steps; i++) {
+            const x = Math.min(hi, lo + (i / steps) * (hi - lo));
+            assert.ok(
+                result.contains(freal(x)),
+                `${freal.name}(${x}) = ${freal(x)} is not in ${result} for [${lo}, ${hi}]`,
+            );
+        }
+    };
+
+    it("intervals wider than pi contain an extremum", () => {
+        assert.ok(nsf.sin(int(1e9, 1e9 + 4)).upper() === 1);
+        assert.ok(nsf.sin(int(1e15, 1e15 + 4)).lower() === -1);
+        assert.ok(nsf.cos(int(1e15, 1e15 + 4)).lower() === -1);
+    });
+
+    it("issue repro sample point", () => {
+        const Y = int(1e15 + 15, 1e15 + 19);
+        const y = 1e15 + 18.25;
+        assert.ok(Y.contains(y));
+        assert.ok(nsf.sin(Y).contains(Math.sin(y)));
+    });
+
+    it("huge arguments do not hang or throw", () => {
+        for (const x of [1e17, 2 ** 53, 2 ** 60, 1e300, -1e17, Number.MAX_VALUE]) {
+            const s = nsf.sin(int(x, x));
+            const c = nsf.cos(int(x, x));
+            assert.ok(s.contains(Math.sin(x)) && s.upper() - s.lower() < 1e-15);
+            assert.ok(c.contains(Math.cos(x)) && c.upper() - c.lower() < 1e-15);
+            assert.ok(nsf.tan(int(x, x)).contains(Math.tan(x)));
+        }
+        denseCheck(nsf.sin, Math.sin, 2 ** 60, 2 ** 60 + 2 ** 8);
+        denseCheck(nsf.cos, Math.cos, 2 ** 60, 2 ** 60 + 2 ** 8);
+    });
+
+    it("degenerate and near-boundary intervals", () => {
+        // Degenerate intervals at zero do not contain any interior extremum
+        assert.deepStrictEqual(nsf.cos(int(0, 0)), int(1, 1));
+        assert.deepStrictEqual(nsf.sin(int(0, 0)), int(0, 0));
+        assert.deepStrictEqual(nsf.cos(int(-0, 0)), int(1, 1));
+        assert.deepStrictEqual(nsf.sin(int(-0, 0)), int(0, 0));
+
+        // Endpoints at (float approximations of) multiples of pi/2, their
+        // neighboring floats, and various widths
+        const boundaries = [0, pi / 2, pi, (3 * pi) / 2, 2 * pi, -pi / 2, -pi, -(3 * pi) / 2];
+        const widths = [0, 1e-300, 1e-15, 0.1, pi / 2, 1, pi, 4, (3 * pi) / 2, 6, 2 * pi - 1e-9];
+        for (const b of boundaries) {
+            for (const lo of [prev(b), b, next(b)]) {
+                for (const width of widths) {
+                    denseCheck(nsf.sin, Math.sin, lo, lo + width);
+                    denseCheck(nsf.cos, Math.cos, lo, lo + width);
+                    denseCheck(nsf.sin, Math.sin, lo - width, lo);
+                    denseCheck(nsf.cos, Math.cos, lo - width, lo);
+                }
+            }
+        }
+    });
+
+    it("dense inclusion checks at many magnitudes", () => {
+        const lowerBounds = [
+            0.7, -2.3, 123.456, -987.654, 1e9, 1e9 + 0.5, -3.3e9, 7.77e11, -1.234e12, 1e15,
+            1e15 + 15, -2.5e15, 6.02e15, 1e16, -4.4e16, -9.9e19, 1.5e20,
+        ];
+        const widths = [0.1, 1, 2, 3, 4, 5, 6, 6.28];
+
+        for (const lo of lowerBounds) {
+            for (const width of widths) {
+                const hi = lo + width;
+                denseCheck(nsf.sin, Math.sin, lo, hi);
+                denseCheck(nsf.cos, Math.cos, lo, hi);
+            }
+        }
+    });
+});
+
 describe("acos", () => {
     assert.deepStrictEqual(
         nsf.acos(nsf.single(0)),
