@@ -11,42 +11,69 @@ import {
 import { udiv, usub } from "./arithmetic.ts";
 
 const pi = Math.PI;
-const halfpi = Math.PI / 2;
 const tau = 2 * Math.PI;
-export function wrapAngle(angle: number): number {
-    return ((angle % tau) + tau) % tau;
+
+// Quadrant of the angle x (mod 2*pi), numbered 0 to 3:
+//   0: (0, pi/2)      sin > 0, cos > 0
+//   1: (pi/2, pi)     sin > 0, cos < 0
+//   2: (pi, 3pi/2)    sin < 0, cos < 0
+//   3: (3pi/2, 2pi)   sin < 0, cos > 0
+//
+// For any float x other than 0, the true sin(x) and cos(x) are never zero
+// (pi is irrational). Assuming Math.sin and Math.cos are accurate to within
+// one ulp (as the endpoint evaluations already assume), their signs are
+// therefore always correct, and the quadrant is known exactly, even for huge
+// x. x = 0 lies on the boundary between quadrants 3 and 0, so it is assigned
+// to quadrant 0 as a lower bound and quadrant 3 as an upper bound.
+function quadrant(x: number, isLowerBound: boolean): number {
+    if (x === 0) return isLowerBound ? 0 : 3;
+    const s = Math.sin(x);
+    const c = Math.cos(x);
+    if (s > 0) return c > 0 ? 0 : 1;
+    return c < 0 ? 2 : 3;
 }
 
-// Returns the list of integers n such that n*pi is in an interval
-export function piMultiples(X: Interval): number[] {
-    const lower = Math.ceil(X.lo / Math.PI);
-    const upper = Math.floor(X.hi / Math.PI);
-
-    if (lower > upper) {
-        return [];
-    }
-
-    const result: number[] = [];
-    for (let n = lower; n <= upper; n++) {
-        result.push(n);
-    }
-    return result;
+// Extrema of sin and cos strictly inside the interval [lo, hi]
+interface Extrema {
+    sinMax: boolean; // pi/2 + 2k*pi
+    cosMin: boolean; // pi + 2k*pi
+    sinMin: boolean; // 3pi/2 + 2k*pi
+    cosMax: boolean; // 2k*pi
 }
 
-// Returns the list of integers n such that (pi/2) + n*pi is in an interval
-export function halfPiMultiples(X: Interval): number[] {
-    const lower = Math.ceil((X.lo - Math.PI / 2) / Math.PI);
-    const upper = Math.floor((X.hi - Math.PI / 2) / Math.PI);
+// Returns which extrema of sin and cos lie strictly inside [lo, hi]. Extrema
+// at the endpoints are covered by evaluating sin/cos at the endpoints.
+// Requires hi - lo < 2*pi.
+//
+// Going from quadrant q to quadrant q+1 crosses the angle (q+1)*pi/2, which is
+// an extremum of either sin or cos. Since the interval is narrower than 2*pi,
+// the number of quadrant boundaries crossed is (qhi - qlo) mod 4, except when
+// both endpoints are in the same quadrant: then it is either 0 (width < pi/2)
+// or 4 (width > 3pi/2), which comparing the width to pi tells apart safely.
+//
+// This avoids computing k*pi for large k, which drifts away from the true
+// multiples of pi because Math.PI is not exactly pi.
+function interiorExtrema(lo: number, hi: number): Extrema {
+    const crossed = [false, false, false, false];
 
-    if (lower > upper) {
-        return [];
+    if (lo !== hi) {
+        const qlo = quadrant(lo, true);
+        const qhi = quadrant(hi, false);
+        let count = (qhi - qlo + 4) % 4;
+        if (count === 0 && hi - lo > pi) count = 4;
+
+        for (let i = 1; i <= count; i++) {
+            crossed[(qlo + i) % 4] = true;
+        }
     }
 
-    const result: number[] = [];
-    for (let n = lower; n <= upper; n++) {
-        result.push(n);
-    }
-    return result;
+    // crossed[q] means the boundary at the start of quadrant q was crossed
+    return {
+        sinMax: crossed[1],
+        cosMin: crossed[2],
+        sinMin: crossed[3],
+        cosMax: crossed[0],
+    };
 }
 
 // COS
@@ -64,14 +91,13 @@ function rightCos(x: number): number {
 export function icos(X: Interval): Union {
     typeCheckIsInterval(X);
 
-    if (X.width() >= 2 * Math.PI) return new Union([new Interval(-1, 1)]);
+    if (!(X.width() < tau)) return new Union([new Interval(-1, 1)]);
 
-    const candidates = [X.lo, X.hi, ...piMultiples(X).map((x) => x * pi)];
+    const extrema = interiorExtrema(X.lo, X.hi);
+    const lower = extrema.cosMin ? -1 : Math.min(leftCos(X.lo), leftCos(X.hi));
+    const upper = extrema.cosMax ? 1 : Math.max(rightCos(X.lo), rightCos(X.hi));
 
-    const left = candidates.map(leftCos);
-    const right = candidates.map(rightCos);
-
-    return new Union([new Interval(Math.min(...left), Math.max(...right))]);
+    return new Union([new Interval(lower, upper)]);
 }
 
 export const ucos = makeUnaryOpUnion(icos);
@@ -92,14 +118,13 @@ function rightSin(x: number): number {
 export function isin(X: Interval): Union {
     typeCheckIsInterval(X);
 
-    if (X.width() >= 2 * Math.PI) return new Union([new Interval(-1, 1)]);
+    if (!(X.width() < tau)) return new Union([new Interval(-1, 1)]);
 
-    const candidates = [X.lo, X.hi, ...halfPiMultiples(X).map((x) => halfpi + x * pi)];
+    const extrema = interiorExtrema(X.lo, X.hi);
+    const lower = extrema.sinMin ? -1 : Math.min(leftSin(X.lo), leftSin(X.hi));
+    const upper = extrema.sinMax ? 1 : Math.max(rightSin(X.lo), rightSin(X.hi));
 
-    const left = candidates.map(leftSin);
-    const right = candidates.map(rightSin);
-
-    return new Union([new Interval(Math.min(...left), Math.max(...right))]);
+    return new Union([new Interval(lower, upper)]);
 }
 
 export const usin = makeUnaryOpUnion(isin);
